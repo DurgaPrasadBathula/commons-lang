@@ -34,7 +34,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
  * <p>Operates on classes without using reflection.</p>
  *
  * <p>This class handles invalid {@code null} inputs as best it can.
- * Each method documents its behaviour in more detail.</p>
+ * Each method documents its behavior in more detail.</p>
  *
  * <p>The notion of a {@code canonical name} includes the human
  * readable name for the type, for example {@code int[]}. The
@@ -50,7 +50,12 @@ public class ClassUtils {
      * @since 3.2
      */
     public enum Interfaces {
-        INCLUDE, EXCLUDE
+
+        /** Includes interfaces. */
+        INCLUDE,
+
+        /** Excludes interfaces. */
+        EXCLUDE
     }
 
     /**
@@ -156,7 +161,6 @@ public class ClassUtils {
      * instance to operate.</p>
      */
     public ClassUtils() {
-      super();
     }
 
     // Short class name
@@ -277,7 +281,7 @@ public class ClassUtils {
      * @since 3.0
      * @see Class#getSimpleName()
      */
-    public static String getSimpleName(final Class<?> cls, String valueIfNull) {
+    public static String getSimpleName(final Class<?> cls, final String valueIfNull) {
         return cls == null ? valueIfNull : cls.getSimpleName();
     }
 
@@ -598,7 +602,7 @@ public class ClassUtils {
     }
 
     /**
-     * Get the interfaces for the specified class.
+     * Gets the interfaces for the specified class.
      *
      * @param cls  the class to look up, may be {@code null}
      * @param interfacesFound the {@code Set} of interfaces for the class
@@ -1162,8 +1166,7 @@ public class ClassUtils {
             return declaredMethod;
         }
 
-        final List<Class<?>> candidateClasses = new ArrayList<>();
-        candidateClasses.addAll(getAllInterfaces(cls));
+        final List<Class<?>> candidateClasses = new ArrayList<>(getAllInterfaces(cls));
         candidateClasses.addAll(getAllSuperclasses(cls));
 
         for (final Class<?> candidateClass : candidateClasses) {
@@ -1194,7 +1197,7 @@ public class ClassUtils {
      */
     private static String toCanonicalName(String className) {
         className = StringUtils.deleteWhitespace(className);
-        Validate.notNull(className, "className must not be null.");
+        Validate.notNull(className, "className");
         if (className.endsWith("[]")) {
             final StringBuilder classNameBuffer = new StringBuilder();
             while (className.endsWith("[]")) {
@@ -1468,7 +1471,7 @@ public class ClassUtils {
     }
 
     /**
-     * Get an {@link Iterable} that can iterate over a class hierarchy in ascending (subclass to superclass) order,
+     * Gets an {@link Iterable} that can iterate over a class hierarchy in ascending (subclass to superclass) order,
      * excluding interfaces.
      *
      * @param type the type to get the class hierarchy from
@@ -1480,7 +1483,7 @@ public class ClassUtils {
     }
 
     /**
-     * Get an {@link Iterable} that can iterate over a class hierarchy in ascending (subclass to superclass) order.
+     * Gets an {@link Iterable} that can iterate over a class hierarchy in ascending (subclass to superclass) order.
      *
      * @param type the type to get the class hierarchy from
      * @param interfacesBehavior switch indicating whether to include or exclude interfaces

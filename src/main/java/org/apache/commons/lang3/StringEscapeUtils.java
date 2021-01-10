@@ -428,7 +428,6 @@ public class StringEscapeUtils {
      * instance to operate.</p>
      */
     public StringEscapeUtils() {
-      super();
     }
 
     // Java and JavaScript
@@ -568,10 +567,10 @@ public class StringEscapeUtils {
      * <p>
      * For example:
      * </p>
-     * <p><code>"bread" &amp; "butter"</code></p>
+     * <p>{@code "bread" &amp; "butter"}</p>
      * becomes:
      * <p>
-     * <code>&amp;quot;bread&amp;quot; &amp;amp; &amp;quot;butter&amp;quot;</code>.
+     * {@code &amp;quot;bread&amp;quot; &amp;amp; &amp;quot;butter&amp;quot;}.
      * </p>
      *
      * <p>Supports all known HTML 4.0 entities, including funky accents.

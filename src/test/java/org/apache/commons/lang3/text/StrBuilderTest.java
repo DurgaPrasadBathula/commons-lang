@@ -17,8 +17,6 @@
 
 package org.apache.commons.lang3.text;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,6 +36,7 @@ import java.io.Writer;
 import java.nio.CharBuffer;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link org.apache.commons.lang3.text.StrBuilder}.
@@ -521,7 +520,7 @@ public class StrBuilderTest {
         final StrBuilder sb = new StrBuilder();
 
         sb.append("junit");
-        char[] a = new char[5];
+        final char[] a = new char[5];
         sb.getChars(0, 5, a, 0);
         assertArrayEquals(new char[]{'j', 'u', 'n', 'i', 't'}, a);
 
@@ -538,7 +537,7 @@ public class StrBuilderTest {
     //-----------------------------------------------------------------------
     @Test
     public void testDeleteIntInt() {
-        StrBuilder sb = new StrBuilder("abc");
+        final StrBuilder sb = new StrBuilder("abc");
         sb.delete(0, 1);
         assertEquals("bc", sb.toString());
         sb.delete(1, 2);
@@ -679,7 +678,7 @@ public class StrBuilderTest {
     // -----------------------------------------------------------------------
     @Test
     public void testReplace_int_int_String() {
-        StrBuilder sb = new StrBuilder("abc");
+        final StrBuilder sb = new StrBuilder("abc");
         sb.replace(0, 1, "d");
         assertEquals("dbc", sb.toString());
         sb.replace(0, 1, "aaa");
@@ -693,12 +692,12 @@ public class StrBuilderTest {
         sb.replace(0, 1000, "text");
         assertEquals("text", sb.toString());
 
-        StrBuilder sb1 = new StrBuilder("atext");
+        final StrBuilder sb1 = new StrBuilder("atext");
         sb1.replace(1, 1, "ny");
         assertEquals("anytext", sb1.toString());
         assertThrows(IndexOutOfBoundsException.class, () -> sb1.replace(2, 1, "anything"));
 
-        StrBuilder sb2 = new StrBuilder();
+        final StrBuilder sb2 = new StrBuilder();
         assertThrows(IndexOutOfBoundsException.class, () -> sb2.replace(1, 2, "anything"));
         assertThrows(IndexOutOfBoundsException.class, () -> sb2.replace(-1, 1, "anything"));
     }
@@ -960,13 +959,13 @@ public class StrBuilderTest {
         sb.replace(StrMatcher.stringMatcher("aa"), "-", 10, sb.length(), -1);
         assertEquals("aaxaaaayaa", sb.toString());
 
-        StrBuilder sb1 = new StrBuilder("aaxaaaayaa");
+        final StrBuilder sb1 = new StrBuilder("aaxaaaayaa");
         assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> sb1.replace(StrMatcher.stringMatcher("aa"), "-", 11, sb1.length(), -1));
         assertEquals("aaxaaaayaa", sb1.toString());
 
-        StrBuilder sb2 = new StrBuilder("aaxaaaayaa");
+        final StrBuilder sb2 = new StrBuilder("aaxaaaayaa");
         assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> sb2.replace(StrMatcher.stringMatcher("aa"), "-", -1, sb2.length(), -1));
@@ -1019,7 +1018,7 @@ public class StrBuilderTest {
         sb.replace(StrMatcher.stringMatcher("aa"), "-", 0, 1000, -1);
         assertEquals("-x--y-", sb.toString());
 
-        StrBuilder sb1 = new StrBuilder("aaxaaaayaa");
+        final StrBuilder sb1 = new StrBuilder("aaxaaaayaa");
         assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> sb1.replace(StrMatcher.stringMatcher("aa"), "-", 2, 1, -1));

@@ -16,11 +16,11 @@
  */
 package org.apache.commons.lang3;
 
-import org.apache.commons.lang3.arch.Processor;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.arch.Processor;
 
 /**
  * An utility class for the os.arch System Property. The class defines methods for
@@ -112,7 +112,7 @@ public class ArchUtils {
      * not of the operating system.
      * </p>
      *
-     * @return A {@link Processor} when supported, else <code>null</code>.
+     * @return A {@link Processor} when supported, else {@code null}.
      */
     public static Processor getProcessor() {
         return getProcessor(SystemUtils.OS_ARCH);
@@ -123,7 +123,7 @@ public class ArchUtils {
      * like a value returned by the os.arch System Property.
      *
      * @param value A {@link String} like a value returned by the os.arch System Property.
-     * @return A {@link Processor} when it exists, else <code>null</code>.
+     * @return A {@link Processor} when it exists, else {@code null}.
      */
     public static Processor getProcessor(final String value) {
         return ARCH_TO_PROCESSOR.get(value);

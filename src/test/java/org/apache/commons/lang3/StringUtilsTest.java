@@ -45,6 +45,7 @@ import java.util.regex.PatternSyntaxException;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.text.WordUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * Unit tests for methods of {@link org.apache.commons.lang3.StringUtils}
@@ -60,29 +61,29 @@ public class StringUtilsTest {
     static final String NON_TRIMMABLE;
 
     static {
-        String ws = "";
-        String nws = "";
+        final StringBuilder ws = new StringBuilder();
+        final StringBuilder nws = new StringBuilder();
         final String hs = String.valueOf(((char) 160));
-        String tr = "";
-        String ntr = "";
+        final StringBuilder tr = new StringBuilder();
+        final StringBuilder ntr = new StringBuilder();
         for (int i = 0; i < Character.MAX_VALUE; i++) {
             if (Character.isWhitespace((char) i)) {
-                ws += String.valueOf((char) i);
+                ws.append(String.valueOf((char) i));
                 if (i > 32) {
-                    ntr += String.valueOf((char) i);
+                    ntr.append(String.valueOf((char) i));
                 }
             } else if (i < 40) {
-                nws += String.valueOf((char) i);
+                nws.append(String.valueOf((char) i));
             }
         }
         for (int i = 0; i <= 32; i++) {
-            tr += String.valueOf((char) i);
+            tr.append(String.valueOf((char) i));
         }
-        WHITESPACE = ws;
-        NON_WHITESPACE = nws;
+        WHITESPACE = ws.toString();
+        NON_WHITESPACE = nws.toString();
         HARD_SPACE = hs;
-        TRIMMABLE = tr;
-        NON_TRIMMABLE = ntr;
+        TRIMMABLE = tr.toString();
+        NON_TRIMMABLE = ntr.toString();
     }
 
     private static final String[] ARRAY_LIST = {"foo", "bar", "baz"};
@@ -113,6 +114,7 @@ public class StringUtilsTest {
 
     private static final String SEPARATOR = ",";
     private static final char SEPARATOR_CHAR = ';';
+    private static final char COMMA_SEPARATOR_CHAR = ',';
 
     private static final String TEXT_LIST = "foo,bar,baz";
     private static final String TEXT_LIST_CHAR = "foo;bar;baz";
@@ -123,6 +125,11 @@ public class StringUtilsTest {
 
     private static final String SENTENCE_UNCAP = "foo bar baz";
     private static final String SENTENCE_CAP = "Foo Bar Baz";
+
+    private static final boolean[] EMPTY = {};
+    private static final boolean[] ARRAY_FALSE_FALSE = {false, false};
+    private static final boolean[] ARRAY_FALSE_TRUE = {false, true};
+    private static final boolean[] ARRAY_FALSE_TRUE_FALSE = {false, true, false};
 
     private void assertAbbreviateWithAbbrevMarkerAndOffset(final String expected, final String abbrevMarker, final int offset, final int maxWidth) {
         final String abcdefghijklmno = "abcdefghijklmno";
@@ -239,7 +246,7 @@ public class StringUtilsTest {
     //Fixed LANG-1463
     @Test
     public void testAbbreviateMarkerWithEmptyString() {
-        String greaterThanMaxTest = "much too long text";
+        final String greaterThanMaxTest = "much too long text";
         assertEquals("much too long", StringUtils.abbreviate(greaterThanMaxTest, "", 13));
     }
 
@@ -430,7 +437,7 @@ public class StringUtilsTest {
         assertNull(StringUtils.appendIfMissing(null, null, (CharSequence[]) null), "appendIfMissing(null,null,null)");
         assertEquals("abc", StringUtils.appendIfMissing("abc", null, (CharSequence[]) null), "appendIfMissing(abc,null,null)");
         assertEquals("xyz", StringUtils.appendIfMissing("", "xyz", (CharSequence[]) null), "appendIfMissing(\"\",xyz,null))");
-        assertEquals("abcxyz", StringUtils.appendIfMissing("abc", "xyz", new CharSequence[]{null}), "appendIfMissing(abc,xyz,{null})");
+        assertEquals("abcxyz", StringUtils.appendIfMissing("abc", "xyz", null), "appendIfMissing(abc,xyz,{null})");
         assertEquals("abc", StringUtils.appendIfMissing("abc", "xyz", ""), "appendIfMissing(abc,xyz,\"\")");
         assertEquals("abcxyz", StringUtils.appendIfMissing("abc", "xyz", "mno"), "appendIfMissing(abc,xyz,mno)");
         assertEquals("abcxyz", StringUtils.appendIfMissing("abcxyz", "xyz", "mno"), "appendIfMissing(abcxyz,xyz,mno)");
@@ -454,7 +461,7 @@ public class StringUtilsTest {
         assertNull(StringUtils.appendIfMissingIgnoreCase(null, null, (CharSequence[]) null), "appendIfMissingIgnoreCase(null,null,null)");
         assertEquals("abc", StringUtils.appendIfMissingIgnoreCase("abc", null, (CharSequence[]) null), "appendIfMissingIgnoreCase(abc,null,null)");
         assertEquals("xyz", StringUtils.appendIfMissingIgnoreCase("", "xyz", (CharSequence[]) null), "appendIfMissingIgnoreCase(\"\",xyz,null)");
-        assertEquals("abcxyz", StringUtils.appendIfMissingIgnoreCase("abc", "xyz", new CharSequence[]{null}), "appendIfMissingIgnoreCase(abc,xyz,{null})");
+        assertEquals("abcxyz", StringUtils.appendIfMissingIgnoreCase("abc", "xyz", null), "appendIfMissingIgnoreCase(abc,xyz,{null})");
         assertEquals("abc", StringUtils.appendIfMissingIgnoreCase("abc", "xyz", ""), "appendIfMissingIgnoreCase(abc,xyz,\"\")");
         assertEquals("abcxyz", StringUtils.appendIfMissingIgnoreCase("abc", "xyz", "mno"), "appendIfMissingIgnoreCase(abc,xyz,mno)");
         assertEquals("abcxyz", StringUtils.appendIfMissingIgnoreCase("abcxyz", "xyz", "mno"), "appendIfMissingIgnoreCase(abcxyz,xyz,mno)");
@@ -684,8 +691,8 @@ public class StringUtilsTest {
         final String s = StringUtils.getIfBlank("abc", () -> "NULL");
         assertEquals("abc", s);
         //Checking that default value supplied only on demand
-        MutableInt numberOfCalls = new MutableInt(0);
-        Supplier<String> countingDefaultSupplier = () -> {
+        final MutableInt numberOfCalls = new MutableInt(0);
+        final Supplier<String> countingDefaultSupplier = () -> {
             numberOfCalls.increment();
             return "NULL";
         };
@@ -752,8 +759,8 @@ public class StringUtilsTest {
         final String s = StringUtils.getIfEmpty("abc", () -> "NULL");
         assertEquals("abc", s);
         //Checking that default value supplied only on demand
-        MutableInt numberOfCalls = new MutableInt(0);
-        Supplier<String> countingDefaultSupplier = () -> {
+        final MutableInt numberOfCalls = new MutableInt(0);
+        final Supplier<String> countingDefaultSupplier = () -> {
             numberOfCalls.increment();
             return "NULL";
         };
@@ -797,22 +804,22 @@ public class StringUtilsTest {
     @Test
     public void testDifferenceAt_StringArray() {
         assertEquals(-1, StringUtils.indexOfDifference((String[]) null));
-        assertEquals(-1, StringUtils.indexOfDifference(new String[]{}));
-        assertEquals(-1, StringUtils.indexOfDifference(new String[]{"abc"}));
-        assertEquals(-1, StringUtils.indexOfDifference(new String[]{null, null}));
-        assertEquals(-1, StringUtils.indexOfDifference(new String[]{"", ""}));
-        assertEquals(0, StringUtils.indexOfDifference(new String[]{"", null}));
-        assertEquals(0, StringUtils.indexOfDifference(new String[]{"abc", null, null}));
-        assertEquals(0, StringUtils.indexOfDifference(new String[]{null, null, "abc"}));
-        assertEquals(0, StringUtils.indexOfDifference(new String[]{"", "abc"}));
-        assertEquals(0, StringUtils.indexOfDifference(new String[]{"abc", ""}));
-        assertEquals(-1, StringUtils.indexOfDifference(new String[]{"abc", "abc"}));
-        assertEquals(1, StringUtils.indexOfDifference(new String[]{"abc", "a"}));
-        assertEquals(2, StringUtils.indexOfDifference(new String[]{"ab", "abxyz"}));
-        assertEquals(2, StringUtils.indexOfDifference(new String[]{"abcde", "abxyz"}));
-        assertEquals(0, StringUtils.indexOfDifference(new String[]{"abcde", "xyz"}));
-        assertEquals(0, StringUtils.indexOfDifference(new String[]{"xyz", "abcde"}));
-        assertEquals(7, StringUtils.indexOfDifference(new String[]{"i am a machine", "i am a robot"}));
+        assertEquals(-1, StringUtils.indexOfDifference());
+        assertEquals(-1, StringUtils.indexOfDifference("abc"));
+        assertEquals(-1, StringUtils.indexOfDifference(null, null));
+        assertEquals(-1, StringUtils.indexOfDifference("", ""));
+        assertEquals(0, StringUtils.indexOfDifference("", null));
+        assertEquals(0, StringUtils.indexOfDifference("abc", null, null));
+        assertEquals(0, StringUtils.indexOfDifference(null, null, "abc"));
+        assertEquals(0, StringUtils.indexOfDifference("", "abc"));
+        assertEquals(0, StringUtils.indexOfDifference("abc", ""));
+        assertEquals(-1, StringUtils.indexOfDifference("abc", "abc"));
+        assertEquals(1, StringUtils.indexOfDifference("abc", "a"));
+        assertEquals(2, StringUtils.indexOfDifference("ab", "abxyz"));
+        assertEquals(2, StringUtils.indexOfDifference("abcde", "abxyz"));
+        assertEquals(0, StringUtils.indexOfDifference("abcde", "xyz"));
+        assertEquals(0, StringUtils.indexOfDifference("xyz", "abcde"));
+        assertEquals(7, StringUtils.indexOfDifference("i am a machine", "i am a robot"));
     }
 
     @Test
@@ -1154,6 +1161,19 @@ public class StringUtilsTest {
         assertEquals(StringUtils.EMPTY, StringUtils.join(BYTE_PRIM_LIST, SEPARATOR_CHAR, 1, 0));
     }
 
+
+    @Test
+    public void testJoin_ArrayOfBooleans() {
+        assertNull(StringUtils.join((boolean[]) null, COMMA_SEPARATOR_CHAR));
+        assertEquals("false;false", StringUtils.join(ARRAY_FALSE_FALSE, SEPARATOR_CHAR));
+        assertEquals("", StringUtils.join(EMPTY, SEPARATOR_CHAR));
+        assertEquals("false,true,false", StringUtils.join(ARRAY_FALSE_TRUE_FALSE, COMMA_SEPARATOR_CHAR));
+        assertEquals("true", StringUtils.join(ARRAY_FALSE_TRUE, SEPARATOR_CHAR, 1, 2));
+        assertNull(StringUtils.join((boolean[]) null, SEPARATOR_CHAR, 0, 1));
+        assertEquals(StringUtils.EMPTY, StringUtils.join(ARRAY_FALSE_FALSE, SEPARATOR_CHAR, 0, 0));
+        assertEquals(StringUtils.EMPTY, StringUtils.join(ARRAY_FALSE_TRUE_FALSE, SEPARATOR_CHAR, 1, 0));
+    }
+
     @Test
     public void testJoin_ArrayOfChars() {
         assertNull(StringUtils.join((char[]) null, ','));
@@ -1341,6 +1361,15 @@ public class StringUtilsTest {
         assertEquals("foo2", StringUtils.join(MIXED_TYPE_LIST));
     }
 
+    @Disabled
+    @Test
+    public void testLang1593() {
+        final int[] arr = new int[] {1, 2, 3, 4, 5, 6, 7};
+        final String expected = StringUtils.join(arr, '-');
+        final String actual = StringUtils.join(arr, "-");
+        assertEquals(expected, actual);
+    }
+
     //-----------------------------------------------------------------------
     @Test
     public void testJoin_Objects() {
@@ -1357,6 +1386,7 @@ public class StringUtilsTest {
 
         assertEquals("a,b,c", StringUtils.joinWith(",", "a", "b", "c"));
         assertEquals(",a,", StringUtils.joinWith(",", null, "a", ""));
+        assertEquals(",a,", StringUtils.joinWith(",", "", "a", ""));
 
         assertEquals("ab", StringUtils.joinWith(null, "a", "b"));
     }
@@ -1531,7 +1561,7 @@ public class StringUtilsTest {
         assertNull(StringUtils.prependIfMissing(null, null, (CharSequence[]) null), "prependIfMissing(null,null null)");
         assertEquals("abc", StringUtils.prependIfMissing("abc", null, (CharSequence[]) null), "prependIfMissing(abc,null,null)");
         assertEquals("xyz", StringUtils.prependIfMissing("", "xyz", (CharSequence[]) null), "prependIfMissing(\"\",xyz,null)");
-        assertEquals("xyzabc", StringUtils.prependIfMissing("abc", "xyz", new CharSequence[]{null}), "prependIfMissing(abc,xyz,{null})");
+        assertEquals("xyzabc", StringUtils.prependIfMissing("abc", "xyz", null), "prependIfMissing(abc,xyz,{null})");
         assertEquals("abc", StringUtils.prependIfMissing("abc", "xyz", ""), "prependIfMissing(abc,xyz,\"\")");
         assertEquals("xyzabc", StringUtils.prependIfMissing("abc", "xyz", "mno"), "prependIfMissing(abc,xyz,mno)");
         assertEquals("xyzabc", StringUtils.prependIfMissing("xyzabc", "xyz", "mno"), "prependIfMissing(xyzabc,xyz,mno)");
@@ -1555,7 +1585,7 @@ public class StringUtilsTest {
         assertNull(StringUtils.prependIfMissingIgnoreCase(null, null, (CharSequence[]) null), "prependIfMissingIgnoreCase(null,null null)");
         assertEquals("abc", StringUtils.prependIfMissingIgnoreCase("abc", null, (CharSequence[]) null), "prependIfMissingIgnoreCase(abc,null,null)");
         assertEquals("xyz", StringUtils.prependIfMissingIgnoreCase("", "xyz", (CharSequence[]) null), "prependIfMissingIgnoreCase(\"\",xyz,null)");
-        assertEquals("xyzabc", StringUtils.prependIfMissingIgnoreCase("abc", "xyz", new CharSequence[]{null}), "prependIfMissingIgnoreCase(abc,xyz,{null})");
+        assertEquals("xyzabc", StringUtils.prependIfMissingIgnoreCase("abc", "xyz", null), "prependIfMissingIgnoreCase(abc,xyz,{null})");
         assertEquals("abc", StringUtils.prependIfMissingIgnoreCase("abc", "xyz", ""), "prependIfMissingIgnoreCase(abc,xyz,\"\")");
         assertEquals("xyzabc", StringUtils.prependIfMissingIgnoreCase("abc", "xyz", "mno"), "prependIfMissingIgnoreCase(abc,xyz,mno)");
         assertEquals("xyzabc", StringUtils.prependIfMissingIgnoreCase("xyzabc", "xyz", "mno"), "prependIfMissingIgnoreCase(xyzabc,xyz,mno)");
@@ -1894,16 +1924,17 @@ public class StringUtilsTest {
     public void testReplace_StringStringArrayStringArrayBoolean() {
         //JAVADOC TESTS START
         assertNull(StringUtils.replaceEachRepeatedly(null, new String[]{"a"}, new String[]{"b"}));
-        assertEquals(StringUtils.replaceEachRepeatedly("", new String[]{"a"}, new String[]{"b"}), "");
-        assertEquals(StringUtils.replaceEachRepeatedly("aba", null, null), "aba");
-        assertEquals(StringUtils.replaceEachRepeatedly("aba", new String[0], null), "aba");
-        assertEquals(StringUtils.replaceEachRepeatedly("aba", null, new String[0]), "aba");
-        assertEquals(StringUtils.replaceEachRepeatedly("aba", new String[0], null), "aba");
+        assertEquals("", StringUtils.replaceEachRepeatedly("", new String[]{"a"}, new String[]{"b"}));
+        assertEquals("aba", StringUtils.replaceEachRepeatedly("aba", null, null));
+        assertEquals("aba", StringUtils.replaceEachRepeatedly("aba", new String[0], null));
+        assertEquals("aba", StringUtils.replaceEachRepeatedly("aba", null, new String[0]));
+        assertEquals("aba", StringUtils.replaceEachRepeatedly("aba", new String[0], null));
 
-        assertEquals(StringUtils.replaceEachRepeatedly("aba", new String[]{"a"}, new String[]{""}), "b");
-        assertEquals(StringUtils.replaceEachRepeatedly("aba", new String[]{null}, new String[]{"a"}), "aba");
-        assertEquals(StringUtils.replaceEachRepeatedly("abcde", new String[]{"ab", "d"}, new String[]{"w", "t"}), "wcte");
-        assertEquals(StringUtils.replaceEachRepeatedly("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"}), "tcte");
+        assertEquals("b", StringUtils.replaceEachRepeatedly("aba", new String[]{"a"}, new String[]{""}));
+        assertEquals("aba", StringUtils.replaceEachRepeatedly("aba", new String[]{null}, new String[]{"a"}));
+        assertEquals("wcte", StringUtils.replaceEachRepeatedly("abcde", new String[]{"ab", "d"}, new String[]{"w", "t"}));
+        assertEquals("tcte", StringUtils.replaceEachRepeatedly("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"}));
+        assertEquals("blaan", StringUtils.replaceEachRepeatedly("blllaan", new String[]{"llaan"}, new String[]{"laan"}) );
 
         assertThrows(
                 IllegalStateException.class,
@@ -3162,6 +3193,7 @@ public class StringUtilsTest {
         assertEquals("abc", StringUtils.unwrap("abc", null));
         assertEquals("abc", StringUtils.unwrap("abc", ""));
         assertEquals("a", StringUtils.unwrap("a", "a"));
+        assertEquals("ababa", StringUtils.unwrap("ababa", "aba"));
         assertEquals("", StringUtils.unwrap("aa", "a"));
         assertEquals("abc", StringUtils.unwrap("\'abc\'", "\'"));
         assertEquals("abc", StringUtils.unwrap("\"abc\"", "\""));
@@ -3237,7 +3269,9 @@ public class StringUtilsTest {
         assertEquals("/x/y/z/", StringUtils.wrapIfMissing("x/y/z", '/'));
         assertEquals("/x/y/z/", StringUtils.wrapIfMissing("/x/y/z", '/'));
         assertEquals("/x/y/z/", StringUtils.wrapIfMissing("x/y/z/", '/'));
-        assertEquals("/", StringUtils.wrapIfMissing("/", '/'));
+
+        assertSame("/", StringUtils.wrapIfMissing("/", '/'));
+        assertSame("/x/", StringUtils.wrapIfMissing("/x/", '/'));
     }
 
     @Test
@@ -3259,7 +3293,9 @@ public class StringUtilsTest {
         assertEquals("/x/y/z/", StringUtils.wrapIfMissing("x/y/z/", "/"));
         assertEquals("/", StringUtils.wrapIfMissing("/", "/"));
         assertEquals("ab/ab", StringUtils.wrapIfMissing("/", "ab"));
-        assertEquals("ab/ab", StringUtils.wrapIfMissing("ab/ab", "ab"));
+
+        assertSame("ab/ab", StringUtils.wrapIfMissing("ab/ab", "ab"));
+        assertSame("//x//", StringUtils.wrapIfMissing("//x//", "//"));
     }
 
     @Test
@@ -3273,12 +3309,12 @@ public class StringUtilsTest {
         assertEquals("title", "TITLE".toLowerCase(Locale.ROOT));
         assertEquals("title", StringUtils.toRootLowerCase("TITLE"));
         // Make sure we are not using the default Locale:
-        Locale defaultLocales = Locale.getDefault();
+        final Locale defaultLocale = Locale.getDefault();
         try {
             Locale.setDefault(TURKISH);
             assertEquals("title", StringUtils.toRootLowerCase("TITLE"));
         } finally {
-            Locale.setDefault(defaultLocales);
+            Locale.setDefault(defaultLocale);
         }
     }
 
@@ -3293,12 +3329,47 @@ public class StringUtilsTest {
         assertEquals("TITLE", "title".toUpperCase(Locale.ROOT));
         assertEquals("TITLE", StringUtils.toRootUpperCase("title"));
         // Make sure we are not using the default Locale:
-        Locale defaultLocales = Locale.getDefault();
+        final Locale defaultLocale = Locale.getDefault();
         try {
             Locale.setDefault(TURKISH);
             assertEquals("TITLE", StringUtils.toRootUpperCase("title"));
         } finally {
-            Locale.setDefault(defaultLocales);
+            Locale.setDefault(defaultLocale);
+        }
+    }
+
+    @Test
+    public void testGeorgianSample() {
+        final char[] arrayI = new char[]{
+                //Latin Small Letter dotless I
+                (char) 0x0131,
+                //Greek Capital Letter Theta
+                (char) 0x03F4
+        };
+        final char[] arrayJ = new char[]{
+                //Latin Capital Letter I with dot above
+                (char) 0x0130,
+                //Greek Theta Symbol
+                (char) 0x03D1
+        };
+        for (final char i : arrayI) {
+            for (final char j : arrayJ) {
+                final String si = String.valueOf(i);
+                final String sj = String.valueOf(j);
+                final boolean res1 = si.equalsIgnoreCase(sj);
+                final CharSequence ci = new StringBuilder(si);
+                final CharSequence cj = new StringBuilder(sj);
+                boolean res2 = StringUtils.startsWithIgnoreCase(ci, cj);
+                assertEquals(res1, res2, "si : " + si + " sj : " + sj);
+                res2 = StringUtils.endsWithIgnoreCase(ci, cj);
+                assertEquals(res1, res2, "si : " + si + " sj : " + sj);
+                res2 = StringUtils.compareIgnoreCase(ci.toString(), cj.toString()) == 0;
+                assertEquals(res1, res2, "si : " + si + " sj : " + sj);
+                res2 = StringUtils.indexOfIgnoreCase(ci.toString(), cj.toString()) == 0;
+                assertEquals(res1, res2, "si : " + si + " sj : " + sj);
+                res2 = StringUtils.lastIndexOfIgnoreCase(ci.toString(), cj.toString()) == 0;
+                assertEquals(res1, res2, "si : " + si + " sj : " + sj);
+            }
         }
     }
 }

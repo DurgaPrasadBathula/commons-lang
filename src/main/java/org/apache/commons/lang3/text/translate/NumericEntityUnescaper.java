@@ -19,13 +19,14 @@ package org.apache.commons.lang3.text.translate;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 
 /**
  * Translate XML numeric entities of the form &amp;#[xX]?\d+;? to
  * the specific codepoint.
  *
- * Note that the semi-colon is optional.
+ * Note that the semicolon is optional.
  *
  * @since 3.0
  * @deprecated as of 3.6, use commons-text
@@ -35,7 +36,24 @@ import java.util.EnumSet;
 @Deprecated
 public class NumericEntityUnescaper extends CharSequenceTranslator {
 
-    public enum OPTION { semiColonRequired, semiColonOptional, errorIfNoSemiColon }
+    /** Enumerates NumericEntityUnescaper options for unescaping. */
+    public enum OPTION {
+
+        /**
+         * Require a semicolon.
+         */
+        semiColonRequired,
+
+        /**
+         * Do not require a semicolon.
+         */
+        semiColonOptional,
+
+        /**
+         * Throw an exception if a semicolon is missing.
+         */
+        errorIfNoSemiColon
+    }
 
     // TODO?: Create an OptionsSet class to hide some of the conditional logic below
     private final EnumSet<OPTION> options;
@@ -44,7 +62,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
      * Create a UnicodeUnescaper.
      *
      * The constructor takes a list of options, only one type of which is currently
-     * available (whether to allow, error or ignore the semi-colon on the end of a
+     * available (whether to allow, error or ignore the semicolon on the end of a
      * numeric entity to being missing).
      *
      * For example, to support numeric entities without a ';':
@@ -52,7 +70,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
      * and to throw an IllegalArgumentException when they're missing:
      *    new NumericEntityUnescaper(NumericEntityUnescaper.OPTION.errorIfNoSemiColon)
      *
-     * Note that the default behaviour is to ignore them.
+     * Note that the default behavior is to ignore them.
      *
      * @param options to apply to this unescaper
      */
@@ -60,7 +78,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
         if (options.length > 0) {
             this.options = EnumSet.copyOf(Arrays.asList(options));
         } else {
-            this.options = EnumSet.copyOf(Arrays.asList(new OPTION[] { OPTION.semiColonRequired }));
+            this.options = EnumSet.copyOf(Collections.singletonList(OPTION.semiColonRequired));
         }
     }
 

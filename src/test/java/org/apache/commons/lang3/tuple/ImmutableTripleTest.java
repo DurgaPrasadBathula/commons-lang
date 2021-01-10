@@ -22,16 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -123,11 +120,7 @@ public class ImmutableTripleTest {
     @SuppressWarnings("unchecked")
     public void testSerialization() throws Exception {
         final ImmutableTriple<Integer, String, Boolean> origTriple = ImmutableTriple.of(0, "foo", Boolean.TRUE);
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final ObjectOutputStream out = new ObjectOutputStream(baos);
-        out.writeObject(origTriple);
-        final ImmutableTriple<Integer, String, Boolean> deserializedTriple = (ImmutableTriple<Integer, String, Boolean>) new ObjectInputStream(
-                new ByteArrayInputStream(baos.toByteArray())).readObject();
+        final ImmutableTriple<Integer, String, Boolean> deserializedTriple = SerializationUtils.roundtrip(origTriple);
         assertEquals(origTriple, deserializedTriple);
         assertEquals(origTriple.hashCode(), deserializedTriple.hashCode());
     }
@@ -163,12 +156,12 @@ public class ImmutableTripleTest {
 
     @Test
     public void testUseAsKeyOfHashMap() {
-        HashMap<ImmutableTriple<Object, Object, Object>, String> map = new HashMap<>();
-        Object o1 = new Object();
-        Object o2 = new Object();
-        Object o3 = new Object();
-        ImmutableTriple<Object, Object, Object> key1 = ImmutableTriple.of(o1, o2, o3);
-        String value1 = "a1";
+        final HashMap<ImmutableTriple<Object, Object, Object>, String> map = new HashMap<>();
+        final Object o1 = new Object();
+        final Object o2 = new Object();
+        final Object o3 = new Object();
+        final ImmutableTriple<Object, Object, Object> key1 = ImmutableTriple.of(o1, o2, o3);
+        final String value1 = "a1";
         map.put(key1, value1);
         assertEquals(value1, map.get(key1));
         assertEquals(value1, map.get(ImmutableTriple.of(o1, o2, o3)));
@@ -176,17 +169,17 @@ public class ImmutableTripleTest {
 
     @Test
     public void testUseAsKeyOfTreeMap() {
-        TreeMap<ImmutableTriple<Integer, Integer, Integer>, String> map = new TreeMap<>();
+        final TreeMap<ImmutableTriple<Integer, Integer, Integer>, String> map = new TreeMap<>();
         map.put(ImmutableTriple.of(0, 1, 2), "012");
         map.put(ImmutableTriple.of(0, 1, 1), "011");
         map.put(ImmutableTriple.of(0, 0, 1), "001");
-        ArrayList<ImmutableTriple<Integer, Integer, Integer>> expected = new ArrayList<>();
+        final ArrayList<ImmutableTriple<Integer, Integer, Integer>> expected = new ArrayList<>();
         expected.add(ImmutableTriple.of(0, 0, 1));
         expected.add(ImmutableTriple.of(0, 1, 1));
         expected.add(ImmutableTriple.of(0, 1, 2));
-        Iterator<Entry<ImmutableTriple<Integer, Integer, Integer>, String>> it = map.entrySet().iterator();
-        for (ImmutableTriple<Integer, Integer, Integer> item : expected) {
-            Entry<ImmutableTriple<Integer, Integer, Integer>, String> entry = it.next();
+        final Iterator<Entry<ImmutableTriple<Integer, Integer, Integer>, String>> it = map.entrySet().iterator();
+        for (final ImmutableTriple<Integer, Integer, Integer> item : expected) {
+            final Entry<ImmutableTriple<Integer, Integer, Integer>, String> entry = it.next();
             assertEquals(item, entry.getKey());
             assertEquals(item.getLeft() + "" + item.getMiddle() + "" + item.getRight(), entry.getValue());
         }

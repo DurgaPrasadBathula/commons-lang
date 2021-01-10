@@ -17,6 +17,9 @@
 package org.apache.commons.lang3;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Comparator;
@@ -38,7 +41,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
  * <p>This class tries to handle {@code null} input gracefully.
  * An exception will not be thrown for a {@code null}
  * array input. However, an Object array that contains a {@code null}
- * element may throw an exception. Each method documents its behaviour.
+ * element may throw an exception. Each method documents its behavior.
  *
  * <p>#ThreadSafe#
  * @since 2.0
@@ -91,6 +94,13 @@ public class ArrayUtils {
     public static final Double[] EMPTY_DOUBLE_OBJECT_ARRAY = new Double[0];
 
     /**
+     * An empty immutable {@code Field} array.
+     *
+     * @since 3.10
+     */
+    public static final Field[] EMPTY_FIELD_ARRAY = new Field[0];
+
+    /**
      * An empty immutable {@code float} array.
      */
     public static final float[] EMPTY_FLOAT_ARRAY = new float[0];
@@ -121,6 +131,13 @@ public class ArrayUtils {
     public static final Long[] EMPTY_LONG_OBJECT_ARRAY = new Long[0];
 
     /**
+     * An empty immutable {@code Method} array.
+     *
+     * @since 3.10
+     */
+    public static final Method[] EMPTY_METHOD_ARRAY = new Method[0];
+
+    /**
      * An empty immutable {@code Object} array.
      */
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
@@ -139,6 +156,20 @@ public class ArrayUtils {
      * An empty immutable {@code String} array.
      */
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    /**
+     * An empty immutable {@code Throwable} array.
+     *
+     * @since 3.10
+     */
+    public static final Throwable[] EMPTY_THROWABLE_ARRAY = new Throwable[0];
+
+    /**
+     * An empty immutable {@code Type} array.
+     *
+     * @since 3.10
+     */
+    public static final Type[] EMPTY_TYPE_ARRAY = new Type[0];
 
     /**
      * The index value when an element is not found in a list or array: {@code -1}.
@@ -173,10 +204,6 @@ public class ArrayUtils {
         newArray[newArray.length - 1] = element;
         return newArray;
     }
-
-
-    // NOTE: Cannot use {@code} to enclose text which includes {}, but <code></code> is OK
-
 
     /**
      * <p>Inserts the specified element at the specified position in the array.
@@ -1072,9 +1099,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, true)          = [true]
-     * ArrayUtils.add([true], false)       = [false, true]
-     * ArrayUtils.add([true, false], true) = [true, true, false]
+     * ArrayUtils.addFirst(null, true)          = [true]
+     * ArrayUtils.addFirst([true], false)       = [false, true]
+     * ArrayUtils.addFirst([true, false], true) = [true, true, false]
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1101,9 +1128,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, 1)   = [1]
-     * ArrayUtils.add([1], 0)    = [0, 1]
-     * ArrayUtils.add([1, 0], 1) = [1, 1, 0]
+     * ArrayUtils.addFirst(null, 1)   = [1]
+     * ArrayUtils.addFirst([1], 0)    = [0, 1]
+     * ArrayUtils.addFirst([1, 0], 1) = [1, 1, 0]
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1130,9 +1157,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, '1')       = ['1']
-     * ArrayUtils.add(['1'], '0')      = ['0', '1']
-     * ArrayUtils.add(['1', '0'], '1') = ['1', '1', '0']
+     * ArrayUtils.addFirst(null, '1')       = ['1']
+     * ArrayUtils.addFirst(['1'], '0')      = ['0', '1']
+     * ArrayUtils.addFirst(['1', '0'], '1') = ['1', '1', '0']
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1159,9 +1186,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, 1)   = [1]
-     * ArrayUtils.add([1], 0)    = [0, 1]
-     * ArrayUtils.add([1, 0], 1) = [1, 1, 0]
+     * ArrayUtils.addFirst(null, 1)   = [1]
+     * ArrayUtils.addFirst([1], 0)    = [0, 1]
+     * ArrayUtils.addFirst([1, 0], 1) = [1, 1, 0]
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1188,9 +1215,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, 1)   = [1]
-     * ArrayUtils.add([1], 0)    = [0, 1]
-     * ArrayUtils.add([1, 0], 1) = [1, 1, 0]
+     * ArrayUtils.addFirst(null, 1)   = [1]
+     * ArrayUtils.addFirst([1], 0)    = [0, 1]
+     * ArrayUtils.addFirst([1, 0], 1) = [1, 1, 0]
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1217,9 +1244,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, 1)   = [1]
-     * ArrayUtils.add([1], 0)    = [0, 1]
-     * ArrayUtils.add([1, 0], 1) = [1, 1, 0]
+     * ArrayUtils.addFirst(null, 1)   = [1]
+     * ArrayUtils.addFirst([1], 0)    = [0, 1]
+     * ArrayUtils.addFirst([1, 0], 1) = [1, 1, 0]
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1246,9 +1273,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, 1)   = [1]
-     * ArrayUtils.add([1], 0)    = [0, 1]
-     * ArrayUtils.add([1, 0], 1) = [1, 1, 0]
+     * ArrayUtils.addFirst(null, 1)   = [1]
+     * ArrayUtils.addFirst([1], 0)    = [0, 1]
+     * ArrayUtils.addFirst([1, 0], 1) = [1, 1, 0]
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1275,9 +1302,9 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, 1)   = [1]
-     * ArrayUtils.add([1], 0)    = [0, 1]
-     * ArrayUtils.add([1, 0], 1) = [1, 1, 0]
+     * ArrayUtils.addFirst(null, 1)   = [1]
+     * ArrayUtils.addFirst([1], 0)    = [0, 1]
+     * ArrayUtils.addFirst([1, 0], 1) = [1, 1, 0]
      * </pre>
      *
      * @param array the array to "add" the element to, may be {@code null}.
@@ -1304,11 +1331,11 @@ public class ArrayUtils {
      * </p>
      *
      * <pre>
-     * ArrayUtils.add(null, null)      = IllegalArgumentException
-     * ArrayUtils.add(null, "a")       = ["a"]
-     * ArrayUtils.add(["a"], null)     = [null, "a"]
-     * ArrayUtils.add(["a"], "b")      = ["b", "a"]
-     * ArrayUtils.add(["a", "b"], "c") = ["c", "a", "b"]
+     * ArrayUtils.addFirst(null, null)      = IllegalArgumentException
+     * ArrayUtils.addFirst(null, "a")       = ["a"]
+     * ArrayUtils.addFirst(["a"], null)     = [null, "a"]
+     * ArrayUtils.addFirst(["a"], "b")      = ["b", "a"]
+     * ArrayUtils.addFirst(["a", "b"], "c") = ["c", "a", "b"]
      * </pre>
      *
      * @param <T> the component type of the array
@@ -1628,6 +1655,33 @@ public class ArrayUtils {
         return Array.newInstance(newArrayComponentType, 1);
     }
 
+    /**
+     * Gets the nTh element of an array or null if the index is out of bounds or the array is null.
+     *
+     * @param <T> The type of array elements.
+     * @param array The array to index.
+     * @param index The index
+     * @return the nTh element of an array or null if the index is out of bounds or the array is null.
+     * @since 3.11
+     */
+    public static <T> T get(final T[] array, final int index) {
+        return get(array, index, null);
+    }
+
+    /**
+     * Gets the nTh element of an array or a default value if the index is out of bounds.
+     *
+     * @param <T> The type of array elements.
+     * @param array The array to index.
+     * @param index The index
+     * @param defaultValue The return value of the given index is out of bounds.
+     * @return the nTh element of an array or a default value if the index is out of bounds.
+     * @since 3.11
+     */
+    public static <T> T get(final T[] array, final int index, final T defaultValue) {
+        return isArrayIndexValid(array, index) ? array[index] : defaultValue;
+    }
+
     //-----------------------------------------------------------------------
     /**
      * <p>Returns the length of the specified array.
@@ -1700,7 +1754,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final boolean[] array, final boolean valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -1751,7 +1805,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final byte[] array, final byte valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -1802,7 +1856,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final char[] array, final char valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -1874,7 +1928,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final double[] array, final double valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -1916,7 +1970,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final double[] array, final double valueToFind, int startIndex, final double tolerance) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -1967,7 +2021,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final float[] array, final float valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -2018,7 +2072,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final int[] array, final int valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -2069,7 +2123,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final long[] array, final long valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -2120,7 +2174,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final Object[] array, final Object objectToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -2171,7 +2225,7 @@ public class ArrayUtils {
      * @since 3.10
      */
     public static BitSet indexesOf(final short[] array, final short valueToFind, int startIndex) {
-        BitSet bitSet = new BitSet();
+        final BitSet bitSet = new BitSet();
 
         if (array == null) {
             return bitSet;
@@ -2383,8 +2437,10 @@ public class ArrayUtils {
         if (startIndex < 0) {
             startIndex = 0;
         }
+        final boolean searchNaN = Double.isNaN(valueToFind);
         for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
+            final double element = array[i];
+            if (valueToFind == element || (searchNaN && Double.isNaN(element))) {
                 return i;
             }
         }
@@ -2462,58 +2518,60 @@ public class ArrayUtils {
         if (startIndex < 0) {
             startIndex = 0;
         }
+        final boolean searchNaN = Float.isNaN(valueToFind);
         for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
+            final float element = array[i];
+            if (valueToFind == element || (searchNaN && Float.isNaN(element))) {
                 return i;
             }
         }
         return INDEX_NOT_FOUND;
     }
 
-   // int IndexOf
-//-----------------------------------------------------------------------
-/**
- * <p>Finds the index of the given value in the array.
- *
- * <p>This method returns {@link #INDEX_NOT_FOUND} ({@code -1}) for a {@code null} input array.
- *
- * @param array  the array to search through for the object, may be {@code null}
- * @param valueToFind  the value to find
- * @return the index of the value within the array,
- *  {@link #INDEX_NOT_FOUND} ({@code -1}) if not found or {@code null} array input
- */
-public static int indexOf(final int[] array, final int valueToFind) {
-    return indexOf(array, valueToFind, 0);
-}
-
+    // int IndexOf
+    //-----------------------------------------------------------------------
     /**
-     * <p>Finds the index of the given value in the array starting at the given index.
+     * <p>Finds the index of the given value in the array.
      *
      * <p>This method returns {@link #INDEX_NOT_FOUND} ({@code -1}) for a {@code null} input array.
      *
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} ({@code -1}).
-     *
      * @param array  the array to search through for the object, may be {@code null}
      * @param valueToFind  the value to find
-     * @param startIndex  the index to start searching at
      * @return the index of the value within the array,
      *  {@link #INDEX_NOT_FOUND} ({@code -1}) if not found or {@code null} array input
      */
-    public static int indexOf(final int[] array, final int valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
-        }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
-            }
-        }
+    public static int indexOf(final int[] array, final int valueToFind) {
+        return indexOf(array, valueToFind, 0);
+    }
+
+   /**
+ * <p>Finds the index of the given value in the array starting at the given index.
+ *
+ * <p>This method returns {@link #INDEX_NOT_FOUND} ({@code -1}) for a {@code null} input array.
+ *
+ * <p>A negative startIndex is treated as zero. A startIndex larger than the array
+ * length will return {@link #INDEX_NOT_FOUND} ({@code -1}).
+ *
+ * @param array  the array to search through for the object, may be {@code null}
+ * @param valueToFind  the value to find
+ * @param startIndex  the index to start searching at
+ * @return the index of the value within the array,
+ *  {@link #INDEX_NOT_FOUND} ({@code -1}) if not found or {@code null} array input
+ */
+public static int indexOf(final int[] array, final int valueToFind, int startIndex) {
+    if (array == null) {
         return INDEX_NOT_FOUND;
     }
+    if (startIndex < 0) {
+        startIndex = 0;
+    }
+    for (int i = startIndex; i < array.length; i++) {
+        if (valueToFind == array[i]) {
+            return i;
+        }
+    }
+    return INDEX_NOT_FOUND;
+}
 
     // long IndexOf
     //-----------------------------------------------------------------------
@@ -3051,18 +3109,21 @@ public static int indexOf(final int[] array, final int valueToFind) {
 
     /**
      * Returns whether a given array can safely be accessed at the given index.
+     *
+     * <pre>
+     * ArrayUtils.isArrayIndexValid(null, 0)       = false
+     * ArrayUtils.isArrayIndexValid([], 0)         = false
+     * ArrayUtils.isArrayIndexValid(["a"], 0)      = true
+     * </pre>
+     *
      * @param <T> the component type of the array
      * @param array the array to inspect, may be null
      * @param index the index of the array to be inspected
      * @return Whether the given index is safely-accessible in the given array
      * @since 3.8
      */
-    public static <T> boolean isArrayIndexValid(T[] array, int index) {
-        if (getLength(array) == 0 || array.length <= index) {
-            return false;
-        }
-
-        return index >= 0;
+    public static <T> boolean isArrayIndexValid(final T[] array, final int index) {
+        return index >= 0 && getLength(array) > index;
     }
 
     /**
@@ -3076,9 +3137,6 @@ public static int indexOf(final int[] array, final int valueToFind) {
         return getLength(array) == 0;
     }
 
-    // IndexOf search
-    // ----------------------------------------------------------------------
-
     /**
      * <p>Checks if an array of primitive bytes is empty or {@code null}.
      *
@@ -3089,6 +3147,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
     public static boolean isEmpty(final byte[] array) {
         return getLength(array) == 0;
     }
+
+    // IndexOf search
+    // ----------------------------------------------------------------------
 
     /**
      * <p>Checks if an array of primitive chars is empty or {@code null}.
@@ -3123,8 +3184,6 @@ public static int indexOf(final int[] array, final int valueToFind) {
         return getLength(array) == 0;
     }
 
-
-
     /**
      * <p>Checks if an array of primitive ints is empty or {@code null}.
      *
@@ -3135,6 +3194,8 @@ public static int indexOf(final int[] array, final int valueToFind) {
     public static boolean isEmpty(final int[] array) {
         return getLength(array) == 0;
     }
+
+
 
     /**
      * <p>Checks if an array of primitive longs is empty or {@code null}.
@@ -3379,8 +3440,23 @@ public static int indexOf(final int[] array, final int valueToFind) {
         return getLength(array1) == getLength(array2);
     }
 
-    // Is same length
-    //-----------------------------------------------------------------------
+    /**
+     * <p>Checks whether two arrays are the same length, treating
+     * {@code null} arrays as length {@code 0}.
+     *
+     * <p>Any multi-dimensional aspects of the arrays are ignored.
+     *
+     * @param array1 the first array, may be {@code null}
+     * @param array2 the second array, may be {@code null}
+     * @return {@code true} if length of arrays matches, treating
+     *  {@code null} as an empty array
+     * @since 3.11
+     */
+    public static boolean isSameLength(final Object array1, final Object array2) {
+        return getLength(array1) == getLength(array2);
+    }
+
+
     /**
      * <p>Checks whether two arrays are the same length, treating
      * {@code null} arrays as length {@code 0}.
@@ -3636,7 +3712,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * @since 3.4
      */
     public static <T extends Comparable<? super T>> boolean isSorted(final T[] array) {
-        return isSorted(array, (o1, o2) -> o1.compareTo(o2));
+        return isSorted(array, Comparable::compareTo);
     }
 
     /**
@@ -3906,7 +3982,6 @@ public static int indexOf(final int[] array, final int valueToFind) {
         return INDEX_NOT_FOUND;
     }
 
-
     /**
      * <p>Finds the last index of the given value within the array.
      *
@@ -3920,6 +3995,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
     public static int lastIndexOf(final float[] array, final float valueToFind) {
         return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
     }
+
 
     /**
      * <p>Finds the last index of the given value in the array starting at the given index.
@@ -4380,9 +4456,6 @@ public static int indexOf(final int[] array, final int valueToFind) {
         return array;
     }
 
-    // Primitive/Object array converters
-    // ----------------------------------------------------------------------
-
     /**
      * <p>Defensive programming technique to change a {@code null}
      * reference to an empty one.
@@ -4402,6 +4475,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
         }
         return array;
     }
+
+    // Primitive/Object array converters
+    // ----------------------------------------------------------------------
 
     /**
      * <p>Defensive programming technique to change a {@code null}
@@ -5118,7 +5194,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
 
         final int srcLength = getLength(array);
         // No need to check maxIndex here, because method only currently called from removeElements()
-        // which guarantee to generate on;y valid bit entries.
+        // which guarantee to generate only valid bit entries.
 //        final int maxIndex = indices.length();
 //        if (maxIndex > srcLength) {
 //            throw new IndexOutOfBoundsException("Index: " + (maxIndex-1) + ", Length: " + srcLength);
@@ -5155,8 +5231,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
     static Object removeAll(final Object array, final int... indices) {
         final int length = getLength(array);
         int diff = 0; // number of distinct indexes, i.e. number of entries that will be removed
-        final int[] clonedIndices = clone(indices);
-        Arrays.sort(clonedIndices);
+        final int[] clonedIndices = ArraySorter.sort(clone(indices));
 
         // identify length of result array
         if (isNotEmpty(clonedIndices)) {
@@ -5186,7 +5261,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
                     final int cp = end - index - 1;
                     dest -= cp;
                     System.arraycopy(array, index + 1, result, dest, cp);
-                    // Afer this copy, we still have room for dest items.
+                    // After this copy, we still have room for dest items.
                 }
                 end = index;
             }
@@ -5267,7 +5342,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5275,7 +5350,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(boolean[], boolean)}
      */
+    @Deprecated
     public static boolean[] removeAllOccurences(final boolean[] array, final boolean element) {
         return (boolean[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5286,7 +5363,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5294,7 +5371,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(byte[], byte)}
      */
+    @Deprecated
     public static byte[] removeAllOccurences(final byte[] array, final byte element) {
         return (byte[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5305,7 +5384,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5313,7 +5392,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(char[], char)}
      */
+    @Deprecated
     public static char[] removeAllOccurences(final char[] array, final char element) {
         return (char[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5324,7 +5405,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5332,7 +5413,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(double[], double)}
      */
+    @Deprecated
     public static double[] removeAllOccurences(final double[] array, final double element) {
         return (double[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5343,7 +5426,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5351,7 +5434,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(float[], float)}
      */
+    @Deprecated
     public static float[] removeAllOccurences(final float[] array, final float element) {
         return (float[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5362,7 +5447,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5370,7 +5455,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(int[], int)}
      */
+    @Deprecated
     public static int[] removeAllOccurences(final int[] array, final int element) {
         return (int[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5381,7 +5468,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5389,7 +5476,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(long[], long)}
      */
+    @Deprecated
     public static long[] removeAllOccurences(final long[] array, final long element) {
         return (long[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5400,7 +5489,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param element the element to remove
@@ -5408,7 +5497,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(short[], short)}
      */
+    @Deprecated
     public static short[] removeAllOccurences(final short[] array, final short element) {
         return (short[]) removeAll((Object) array, indexesOf(array, element));
     }
@@ -5419,7 +5510,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>
      * All subsequent elements are shifted to the left (subtracts one from their indices).
      * If the array doesn't contains such an element, no elements are removed from the array.
-     * <code>null</code> will be returned if the input array is <code>null</code>.
+     * {@code null} will be returned if the input array is {@code null}.
      * </p>
      *
      * @param <T> the type of object in the array
@@ -5428,8 +5519,182 @@ public static int indexOf(final int[] array, final int valueToFind) {
      *
      * @return A new array containing the existing elements except the occurrences of the specified element.
      * @since 3.5
+     * @deprecated Use {@link #removeAllOccurrences(Object[], Object)}
      */
+    @Deprecated
     public static <T> T[] removeAllOccurences(final T[] array, final T element) {
+        return (T[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified boolean array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static boolean[] removeAllOccurrences(final boolean[] array, final boolean element) {
+        return (boolean[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified byte array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static byte[] removeAllOccurrences(final byte[] array, final byte element) {
+        return (byte[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified char array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static char[] removeAllOccurrences(final char[] array, final char element) {
+        return (char[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified double array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static double[] removeAllOccurrences(final double[] array, final double element) {
+        return (double[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified float array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static float[] removeAllOccurrences(final float[] array, final float element) {
+        return (float[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified int array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static int[] removeAllOccurrences(final int[] array, final int element) {
+        return (int[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified long array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static long[] removeAllOccurrences(final long[] array, final long element) {
+        return (long[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified short array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static short[] removeAllOccurrences(final short[] array, final short element) {
+        return (short[]) removeAll((Object) array, indexesOf(array, element));
+    }
+
+    /**
+     * Removes the occurrences of the specified element from the specified array.
+     *
+     * <p>
+     * All subsequent elements are shifted to the left (subtracts one from their indices).
+     * If the array doesn't contains such an element, no elements are removed from the array.
+     * {@code null} will be returned if the input array is {@code null}.
+     * </p>
+     *
+     * @param <T> the type of object in the array
+     * @param element the element to remove
+     * @param array the input array
+     *
+     * @return A new array containing the existing elements except the occurrences of the specified element.
+     * @since 3.10
+     */
+    public static <T> T[] removeAllOccurrences(final T[] array, final T element) {
         return (T[]) removeAll((Object) array, indexesOf(array, element));
     }
 
@@ -6264,7 +6529,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         boolean tmp;
         while (j > i) {
@@ -6311,7 +6576,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         byte tmp;
         while (j > i) {
@@ -6358,7 +6623,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         char tmp;
         while (j > i) {
@@ -6405,7 +6670,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         double tmp;
         while (j > i) {
@@ -6452,7 +6717,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         float tmp;
         while (j > i) {
@@ -6499,7 +6764,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         int tmp;
         while (j > i) {
@@ -6546,7 +6811,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         long tmp;
         while (j > i) {
@@ -6558,8 +6823,6 @@ public static int indexOf(final int[] array, final int valueToFind) {
         }
     }
 
-    // Reverse
-    //-----------------------------------------------------------------------
     /**
      * <p>Reverses the order of the given array.
      *
@@ -6597,7 +6860,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         Object tmp;
         while (j > i) {
@@ -6644,7 +6907,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
         if (array == null) {
             return;
         }
-        int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+        int i = Math.max(startIndexInclusive, 0);
         int j = Math.min(array.length, endIndexExclusive) - 1;
         short tmp;
         while (j > i) {
@@ -8637,9 +8900,9 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>Note, this method makes only sense to provide arguments of the same type so that the
      * compiler can deduce the type of the array itself. While it is possible to select the
      * type explicitly like in
-     * <code>Number[] array = ArrayUtils.&lt;Number&gt;toArray(Integer.valueOf(42), Double.valueOf(Math.PI))</code>,
+     * {@code Number[] array = ArrayUtils.&lt;Number&gt;toArray(Integer.valueOf(42), Double.valueOf(Math.PI))},
      * there is no real advantage when compared to
-     * <code>new Number[] {Integer.valueOf(42), Double.valueOf(Math.PI)}</code>.
+     * {@code new Number[] {Integer.valueOf(42), Double.valueOf(Math.PI)}}.
      *
      * @param  <T>   the array's element type
      * @param  items  the varargs array items, null allowed
@@ -9216,6 +9479,15 @@ public static int indexOf(final int[] array, final int valueToFind) {
         }
         final Class<?> ct = array.getClass().getComponentType();
         final Class<?> pt = ClassUtils.wrapperToPrimitive(ct);
+        if (Boolean.TYPE.equals(pt)) {
+            return toPrimitive((Boolean[]) array);
+        }
+        if (Character.TYPE.equals(pt)) {
+            return toPrimitive((Character[]) array);
+        }
+        if (Byte.TYPE.equals(pt)) {
+            return toPrimitive((Byte[]) array);
+        }
         if (Integer.TYPE.equals(pt)) {
             return toPrimitive((Integer[]) array);
         }
@@ -9289,7 +9561,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>Multi-dimensional arrays are handled correctly, including
      * multi-dimensional primitive arrays.
      *
-     * <p>The format is that of Java source code, for example <code>{a,b}</code>.
+     * <p>The format is that of Java source code, for example {@code {a,b}}.
      *
      * @param array  the array to get a toString for, may be {@code null}
      * @return a String representation of the array, '{}' if null array input
@@ -9304,7 +9576,7 @@ public static int indexOf(final int[] array, final int valueToFind) {
      * <p>Multi-dimensional arrays are handled correctly, including
      * multi-dimensional primitive arrays.
      *
-     * <p>The format is that of Java source code, for example <code>{a,b}</code>.
+     * <p>The format is that of Java source code, for example {@code {a,b}}.
      *
      * @param array  the array to get a toString for, may be {@code null}
      * @param stringIfNull  the String to return if the array is {@code null}
@@ -9372,12 +9644,11 @@ public static int indexOf(final int[] array, final int valueToFind) {
 
     /**
      * <p>ArrayUtils instances should NOT be constructed in standard programming.
-     * Instead, the class should be used as <code>ArrayUtils.clone(new int[] {2})</code>.
+     * Instead, the class should be used as {@code ArrayUtils.clone(new int[] {2})}.
      *
      * <p>This constructor is public to permit tools that require a JavaBean instance
      * to operate.
      */
     public ArrayUtils() {
-      super();
     }
 }

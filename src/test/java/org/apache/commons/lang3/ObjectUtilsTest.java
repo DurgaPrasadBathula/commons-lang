@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -120,8 +121,8 @@ public class ObjectUtilsTest {
         assertSame(o, ObjectUtils.getIfNull(o, () -> dflt), "dflt was returned when o was not null");
         assertSame(o, ObjectUtils.getIfNull(FOO, () -> dflt), "dflt was returned when o was not null");
         assertSame(o, ObjectUtils.getIfNull("foo", () -> dflt), "dflt was returned when o was not null");
-        MutableInt callsCounter = new MutableInt(0);
-        Supplier<Object> countingDefaultSupplier = () -> {
+        final MutableInt callsCounter = new MutableInt(0);
+        final Supplier<Object> countingDefaultSupplier = () -> {
             callsCounter.increment();
             return dflt;
         };
@@ -149,6 +150,44 @@ public class ObjectUtilsTest {
         assertNull(ObjectUtils.firstNonNull((Object[]) null));
     }
 
+    @Test
+    public void testGetFirstNonNull() {
+        // first non null
+        assertEquals("", ObjectUtils.getFirstNonNull(() -> null, () -> ""));
+        // first encountered value is used
+        assertEquals("1", ObjectUtils.getFirstNonNull(() -> null, () -> "1", () -> "2", () -> null));
+        assertEquals("123", ObjectUtils.getFirstNonNull(() -> "123", () -> null, () -> "456"));
+        // don't evaluate suppliers after first value is found
+        assertEquals("123", ObjectUtils.getFirstNonNull(() -> null, () -> "123", () -> fail("Supplier after first non-null value should not be evaluated")));
+        // supplier returning null and null supplier both result in null
+        assertNull(ObjectUtils.getFirstNonNull(null, () -> null));
+        // Explicitly pass in an empty array of Object type to ensure compiler doesn't complain of unchecked generic array creation
+        assertNull(ObjectUtils.getFirstNonNull());
+        // supplier is null
+        assertNull(ObjectUtils.getFirstNonNull((Supplier<Object>) null));
+        // varargs array itself is null
+        assertNull(ObjectUtils.getFirstNonNull((Supplier<Object>[]) null));
+        // test different types
+        assertEquals(1, ObjectUtils.getFirstNonNull(() -> null, () -> 1));
+        assertEquals(Boolean.TRUE, ObjectUtils.getFirstNonNull(() -> null, () -> Boolean.TRUE));
+    }
+
+    /**
+     * Tests {@link ObjectUtils#anyNull(Object...)}.
+     */
+    @Test
+    public void testAnyNull() {
+        assertTrue(ObjectUtils.anyNull((Object) null));
+        assertTrue(ObjectUtils.anyNull(null, null, null));
+        assertTrue(ObjectUtils.anyNull(null, FOO, BAR));
+        assertTrue(ObjectUtils.anyNull(FOO, BAR, null));
+        assertTrue(ObjectUtils.anyNull(FOO, BAR, null, FOO, BAR));
+
+        assertFalse(ObjectUtils.anyNull());
+        assertFalse(ObjectUtils.anyNull(FOO));
+        assertFalse(ObjectUtils.anyNull(FOO, BAR, 1, Boolean.TRUE, new Object(), new Object[]{}));
+    }
+
     /**
      * Tests {@link ObjectUtils#anyNotNull(Object...)}.
      */
@@ -162,6 +201,21 @@ public class ObjectUtilsTest {
         assertTrue(ObjectUtils.anyNotNull(FOO));
         assertTrue(ObjectUtils.anyNotNull(null, FOO, null));
         assertTrue(ObjectUtils.anyNotNull(null, null, null, null, FOO, BAR));
+    }
+
+    /**
+     * Tests {@link ObjectUtils#allNull(Object...)}.
+     */
+    @Test
+    public void testAllNull() {
+        assertTrue(ObjectUtils.allNull());
+        assertTrue(ObjectUtils.allNull((Object) null));
+        assertTrue(ObjectUtils.allNull((Object[]) null));
+        assertTrue(ObjectUtils.allNull(null, null, null));
+
+        assertFalse(ObjectUtils.allNull(FOO));
+        assertFalse(ObjectUtils.allNull(null, FOO, null));
+        assertFalse(ObjectUtils.allNull(null, null, null, null, FOO, BAR));
     }
 
     /**
@@ -220,10 +274,10 @@ public class ObjectUtilsTest {
 
     @Test
     public void testHashCodeMulti_multiple_likeList() {
-        final List<Object> list0 = new ArrayList<>(Arrays.asList(new Object[0]));
+        final List<Object> list0 = new ArrayList<>(Collections.emptyList());
         assertEquals(list0.hashCode(), ObjectUtils.hashCodeMulti());
 
-        final List<Object> list1 = new ArrayList<>(Arrays.asList("a"));
+        final List<Object> list1 = new ArrayList<>(Collections.singletonList("a"));
         assertEquals(list1.hashCode(), ObjectUtils.hashCodeMulti("a"));
 
         final List<Object> list2 = new ArrayList<>(Arrays.asList("a", "b"));
@@ -336,6 +390,15 @@ public class ObjectUtilsTest {
     public void testToString_ObjectString() {
         assertEquals(BAR, ObjectUtils.toString(null, BAR) );
         assertEquals(Boolean.TRUE.toString(), ObjectUtils.toString(Boolean.TRUE, BAR) );
+    }
+
+    @Test
+    public void testToString_SupplierString() {
+        assertEquals(null, ObjectUtils.toString(null, (Supplier<String>) null));
+        assertEquals(null, ObjectUtils.toString(null, () -> null));
+        // Pretend computing BAR is expensive.
+        assertEquals(BAR, ObjectUtils.toString(null, () -> BAR));
+        assertEquals(Boolean.TRUE.toString(), ObjectUtils.toString(Boolean.TRUE, () -> BAR));
     }
 
     @SuppressWarnings("cast") // 1 OK, because we are checking for code change
@@ -506,7 +569,7 @@ public class ObjectUtilsTest {
      */
     @Test
     public void testCloneOfNotCloneable() {
-        final String string = new String("apache");
+        final String string = "apache";
         assertNull(ObjectUtils.clone(string));
     }
 
@@ -516,7 +579,7 @@ public class ObjectUtilsTest {
     @Test
     public void testCloneOfUncloneable() {
         final UncloneableString string = new UncloneableString("apache");
-        CloneFailedException e = assertThrows(CloneFailedException.class, () -> ObjectUtils.clone(string));
+        final CloneFailedException e = assertThrows(CloneFailedException.class, () -> ObjectUtils.clone(string));
         assertEquals(NoSuchMethodException.class, e.getCause().getClass());
     }
 
@@ -552,7 +615,7 @@ public class ObjectUtilsTest {
      */
     @Test
     public void testPossibleCloneOfNotCloneable() {
-        final String string = new String("apache");
+        final String string = "apache";
         assertSame(string, ObjectUtils.cloneIfPossible(string));
     }
 
@@ -562,7 +625,7 @@ public class ObjectUtilsTest {
     @Test
     public void testPossibleCloneOfUncloneable() {
         final UncloneableString string = new UncloneableString("apache");
-        CloneFailedException e = assertThrows(CloneFailedException.class, () -> ObjectUtils.cloneIfPossible(string));
+        final CloneFailedException e = assertThrows(CloneFailedException.class, () -> ObjectUtils.cloneIfPossible(string));
         assertEquals(NoSuchMethodException.class, e.getCause().getClass());
     }
 
@@ -664,10 +727,9 @@ public class ObjectUtilsTest {
         /**
          * Create a new NonComparableCharSequence instance.
          *
-         * @param value
+         * @param value the CharSequence value
          */
         NonComparableCharSequence(final String value) {
-            super();
             Validate.notNull(value);
             this.value = value;
         }

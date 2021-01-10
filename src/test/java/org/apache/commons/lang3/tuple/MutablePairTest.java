@@ -20,11 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -47,12 +46,28 @@ public class MutablePairTest {
 
     @Test
     public void testBasic() {
-        final MutablePair<Integer, String> pair = new MutablePair<>(0, "foo");
-        assertEquals(0, pair.getLeft().intValue());
-        assertEquals("foo", pair.getRight());
-        final MutablePair<Object, String> pair2 = new MutablePair<>(null, "bar");
-        assertNull(pair2.getLeft());
-        assertEquals("bar", pair2.getRight());
+        MutablePair<Integer, String> oldPair = new MutablePair<>(0, "foo");
+        MutablePair<Integer, String> nowPair;
+        for (int i=0; i<4; i++) {
+            nowPair = MutablePair.of(oldPair);
+            assertEquals(0, nowPair.left.intValue());
+            assertEquals(0, nowPair.getLeft().intValue());
+            assertEquals("foo", nowPair.right);
+            assertEquals("foo", nowPair.getRight());
+            assertEquals(oldPair, nowPair);
+            oldPair = nowPair;
+        }
+
+        MutablePair<Object, String> oldPair2 = new MutablePair<>(null, "bar");
+        MutablePair<Object, String> nowPair2;
+        for (int i=0; i<4; i++) {
+            nowPair2 = MutablePair.of(oldPair2);
+            assertNull(nowPair2.left);
+            assertNull(nowPair2.getLeft());
+            assertEquals("bar", nowPair2.right);
+            assertEquals("bar", nowPair2.getRight());
+            oldPair2 = nowPair2;
+        }
     }
 
     @Test
@@ -88,24 +103,33 @@ public class MutablePairTest {
     }
 
     @Test
-    public void testPairOf() {
+    public void testPairOfMapEntry() {
+        final HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "foo");
+        final Entry<Integer, String> entry = map.entrySet().iterator().next();
+        final Pair<Integer, String> pair = MutablePair.of(entry);
+        assertEquals(entry.getKey(), pair.getLeft());
+        assertEquals(entry.getValue(), pair.getRight());
+    }
+
+    @Test
+    public void testPairOfObjects() {
         final MutablePair<Integer, String> pair = MutablePair.of(0, "foo");
         assertEquals(0, pair.getLeft().intValue());
         assertEquals("foo", pair.getRight());
         final MutablePair<Object, String> pair2 = MutablePair.of(null, "bar");
         assertNull(pair2.getLeft());
         assertEquals("bar", pair2.getRight());
+        final MutablePair pair3 = MutablePair.of(null, null);
+        assertNull(pair3.left);
+        assertNull(pair3.right);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testSerialization() throws Exception {
         final MutablePair<Integer, String> origPair = MutablePair.of(0, "foo");
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final ObjectOutputStream out = new ObjectOutputStream(baos);
-        out.writeObject(origPair);
-        final MutablePair<Integer, String> deserializedPair = (MutablePair<Integer, String>) new ObjectInputStream(
-                new ByteArrayInputStream(baos.toByteArray())).readObject();
+        final MutablePair<Integer, String> deserializedPair = SerializationUtils.roundtrip(origPair);
         assertEquals(origPair, deserializedPair);
         assertEquals(origPair.hashCode(), deserializedPair.hashCode());
     }

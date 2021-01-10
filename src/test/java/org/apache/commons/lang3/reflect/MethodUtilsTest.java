@@ -16,9 +16,9 @@
  */
 package org.apache.commons.lang3.reflect;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.Color;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -447,6 +448,22 @@ public class MethodUtilsTest {
     }
 
     @Test
+    public void testInvokeMethod_VarArgsWithNullValues() throws Exception {
+        assertEquals("String...", MethodUtils.invokeMethod(testBean, "varOverload",
+                "a", null, "c"));
+        assertEquals("String...", MethodUtils.invokeMethod(testBean, "varOverload",
+                                                                "a", "b", null));
+    }
+
+    @Test
+    public void testInvokeMethod_VarArgsNotUniqueResolvable() throws Exception {
+      assertEquals("Boolean...", MethodUtils.invokeMethod(testBean, "varOverload",
+                                                         new Object[] {null}));
+      assertEquals("Object...", MethodUtils.invokeMethod(testBean, "varOverload",
+                                                         (Object[]) null));
+    }
+
+    @Test
     public void testInvokeExactMethod() throws Exception {
         assertEquals("foo()", MethodUtils.invokeExactMethod(testBean, "foo",
                 (Object[]) ArrayUtils.EMPTY_CLASS_ARRAY));
@@ -783,6 +800,15 @@ public class MethodUtilsTest {
                 Annotated.class, true, true));
         assertNotNull(MethodUtils.getAnnotation(PublicChild.class.getMethod("publicAnnotatedMethod"),
                 Annotated.class, true, true));
+
+        assertNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getMethod("parentNotAnnotatedMethod", String.class),
+                Annotated.class, true, true));
+        assertNotNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getMethod("parentProtectedAnnotatedMethod", String.class),
+                Annotated.class, true, true));
+        assertNotNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getDeclaredMethod("privateAnnotatedMethod", String.class),
+                Annotated.class, true, true));
+        assertNotNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getMethod("publicAnnotatedMethod", String.class),
+                Annotated.class, true, true));
     }
 
     @Test
@@ -811,6 +837,15 @@ public class MethodUtilsTest {
                 Annotated.class, true, false));
         assertNotNull(MethodUtils.getAnnotation(PublicChild.class.getMethod("publicAnnotatedMethod"),
                 Annotated.class, true, false));
+
+        assertNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getMethod("parentNotAnnotatedMethod", String.class),
+                Annotated.class, true, false));
+        assertNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getMethod("parentProtectedAnnotatedMethod", String.class),
+                Annotated.class, true, false));
+        assertNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getDeclaredMethod("privateAnnotatedMethod", String.class),
+                Annotated.class, true, false));
+        assertNotNull(MethodUtils.getAnnotation(StringParameterizedChild.class.getMethod("publicAnnotatedMethod", String.class),
+                Annotated.class, true, false));
     }
 
     @Test
@@ -829,17 +864,17 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetMethodsWithAnnotationIllegalArgumentException1() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getMethodsWithAnnotation(FieldUtilsTest.class, null));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getMethodsWithAnnotation(FieldUtilsTest.class, null));
     }
 
     @Test
     public void testGetMethodsWithAnnotationIllegalArgumentException2() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getMethodsWithAnnotation(null, Annotated.class));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getMethodsWithAnnotation(null, Annotated.class));
     }
 
     @Test
     public void testGetMethodsWithAnnotationIllegalArgumentException3() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getMethodsWithAnnotation(null, null));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getMethodsWithAnnotation(null, null));
     }
 
     @Test
@@ -857,33 +892,33 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetMethodsListWithAnnotationIllegalArgumentException1() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getMethodsListWithAnnotation(FieldUtilsTest.class, null));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getMethodsListWithAnnotation(FieldUtilsTest.class, null));
     }
 
     @Test
     public void testGetMethodsListWithAnnotationIllegalArgumentException2() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getMethodsListWithAnnotation(null, Annotated.class));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getMethodsListWithAnnotation(null, Annotated.class));
     }
 
     @Test
     public void testGetMethodsListWithAnnotationIllegalArgumentException3() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getMethodsListWithAnnotation(null, null));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getMethodsListWithAnnotation(null, null));
     }
 
     @Test
     public void testGetAnnotationIllegalArgumentException1() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(NullPointerException.class,
                 () -> MethodUtils.getAnnotation(FieldUtilsTest.class.getDeclaredMethods()[0], null, true, true));
     }
 
     @Test
     public void testGetAnnotationIllegalArgumentException2() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getAnnotation(null, Annotated.class, true, true));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getAnnotation(null, Annotated.class, true, true));
     }
 
     @Test
     public void testGetAnnotationIllegalArgumentException3() {
-        assertThrows(IllegalArgumentException.class, () -> MethodUtils.getAnnotation(null, null, true, true));
+        assertThrows(NullPointerException.class, () -> MethodUtils.getAnnotation(null, null, true, true));
     }
 
     private void expectMatchingAccessibleMethodParameterTypes(final Class<?> cls,
@@ -983,5 +1018,73 @@ public class MethodUtilsTest {
         assertEquals(2, distanceMethod.invoke(null, new Class[]{Integer.class}, new Class[]{Object.class}));
 
         distanceMethod.setAccessible(false);
+    }
+
+    @Test
+    public void testGetMatchingMethod() throws NoSuchMethodException {
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod"),
+                GetMatchingMethodClass.class.getMethod("testMethod"));
+
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod", Long.TYPE),
+                GetMatchingMethodClass.class.getMethod("testMethod", Long.TYPE));
+
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod", Long.class),
+                GetMatchingMethodClass.class.getMethod("testMethod", Long.class));
+
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod", (Class<?>) null),
+                GetMatchingMethodClass.class.getMethod("testMethod", Long.class));
+
+        assertThrows(IllegalStateException.class,
+                () -> MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod2", (Class<?>) null));
+
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod3", Long.TYPE, Long.class),
+                GetMatchingMethodClass.class.getMethod("testMethod3", Long.TYPE, Long.class));
+
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod3", Long.class, Long.TYPE),
+                GetMatchingMethodClass.class.getMethod("testMethod3", Long.class, Long.TYPE));
+
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod3", null, Long.TYPE),
+                GetMatchingMethodClass.class.getMethod("testMethod3", Long.class, Long.TYPE));
+
+        assertEquals(MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod3", Long.TYPE, null),
+                GetMatchingMethodClass.class.getMethod("testMethod3", Long.TYPE, Long.class));
+
+        assertThrows(IllegalStateException.class,
+                () -> MethodUtils.getMatchingMethod(GetMatchingMethodClass.class, "testMethod4", null, null));
+    }
+
+    private static final class GetMatchingMethodClass {
+        public void testMethod() {
+        }
+
+        public void testMethod(final Long aLong) {
+        }
+
+        public void testMethod(final long aLong) {
+        }
+
+        public void testMethod2(final Long aLong) {
+        }
+
+        public void testMethod2(final Color aColor) {
+        }
+
+        public void testMethod2(final long aLong) {
+        }
+
+        public void testMethod3(final long aLong, final Long anotherLong) {
+        }
+
+        public void testMethod3(final Long aLong, final long anotherLong) {
+        }
+
+        public void testMethod3(final Long aLong, final Long anotherLong) {
+        }
+
+        public void testMethod4(final Long aLong, final Long anotherLong) {
+        }
+
+        public void testMethod4(final Color aColor1, final Color aColor2) {
+        }
     }
 }

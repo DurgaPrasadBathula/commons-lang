@@ -115,7 +115,6 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @param initialCapacity  the initial capacity, zero or less will be converted to 32
      */
     public StrBuilder(int initialCapacity) {
-        super();
         if (initialCapacity <= 0) {
             initialCapacity = CAPACITY;
         }
@@ -129,7 +128,6 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @param str  the string to copy, null treated as blank string
      */
     public StrBuilder(final String str) {
-        super();
         if (str == null) {
             buffer = new char[CAPACITY];
         } else {
@@ -278,7 +276,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * This method is the same as checking {@link #length()} and is provided to match the
      * API of Collections.
      *
-     * @return <code>true</code> if the size is <code>0</code>.
+     * @return {@code true} if the size is {@code 0}.
      */
     public boolean isEmpty() {
         return size == 0;
@@ -288,7 +286,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * Clears the string builder (convenience Collections API style method).
      * <p>
      * This method does not reduce the size of the internal character buffer.
-     * To do that, call <code>clear()</code> followed by {@link #minimizeCapacity()}.
+     * To do that, call {@code clear()} followed by {@link #minimizeCapacity()}.
      * <p>
      * This method is the same as {@link #setLength(int)} called with zero
      * and is provided to match the API of Collections.
@@ -363,7 +361,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
         if (size == 0) {
             return ArrayUtils.EMPTY_CHAR_ARRAY;
         }
-        final char chars[] = new char[size];
+        final char[] chars = new char[size];
         System.arraycopy(buffer, 0, chars, 0, size);
         return chars;
     }
@@ -384,7 +382,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
         if (len == 0) {
             return ArrayUtils.EMPTY_CHAR_ARRAY;
         }
-        final char chars[] = new char[len];
+        final char[] chars = new char[len];
         System.arraycopy(buffer, startIndex, chars, 0, len);
         return chars;
     }
@@ -414,7 +412,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @throws NullPointerException if the array is null
      * @throws IndexOutOfBoundsException if any index is invalid
      */
-    public void getChars(final int startIndex, final int endIndex, final char destination[], final int destinationIndex) {
+    public void getChars(final int startIndex, final int endIndex, final char[] destination, final int destinationIndex) {
         if (startIndex < 0) {
             throw new StringIndexOutOfBoundsException(startIndex);
         }
@@ -488,7 +486,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends the text representing <code>null</code> to this string builder.
+     * Appends the text representing {@code null} to this string builder.
      *
      * @return this, to enable chaining
      */
@@ -919,7 +917,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends an int value to the string builder using <code>String.valueOf</code>.
+     * Appends an int value to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -929,7 +927,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends a long value to the string builder using <code>String.valueOf</code>.
+     * Appends a long value to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -939,7 +937,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends a float value to the string builder using <code>String.valueOf</code>.
+     * Appends a float value to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -949,7 +947,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends a double value to the string builder using <code>String.valueOf</code>.
+     * Appends a double value to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -1137,7 +1135,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends an int value followed by a new line to the string builder using <code>String.valueOf</code>.
+     * Appends an int value followed by a new line to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -1148,7 +1146,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends a long value followed by a new line to the string builder using <code>String.valueOf</code>.
+     * Appends a long value followed by a new line to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -1159,7 +1157,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends a float value followed by a new line to the string builder using <code>String.valueOf</code>.
+     * Appends a float value followed by a new line to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -1170,7 +1168,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends a double value followed by a new line to the string builder using <code>String.valueOf</code>.
+     * Appends a double value followed by a new line to the string builder using {@code String.valueOf}.
      *
      * @param value  the value to append
      * @return this, to enable chaining
@@ -1495,7 +1493,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     //-----------------------------------------------------------------------
     /**
      * Appends an object to the builder padding on the left to a fixed width.
-     * The <code>toString</code> of the object is used.
+     * The {@code toString} of the object is used.
      * If the object is larger than the length, the left hand side is lost.
      * If the object is null, the null text value is used.
      *
@@ -1528,7 +1526,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
 
     /**
      * Appends an object to the builder padding on the left to a fixed width.
-     * The <code>String.valueOf</code> of the <code>int</code> value is used.
+     * The {@code String.valueOf} of the {@code int} value is used.
      * If the formatted value is larger than the length, the left hand side is lost.
      *
      * @param value  the value to append
@@ -1542,7 +1540,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
 
     /**
      * Appends an object to the builder padding on the right to a fixed length.
-     * The <code>toString</code> of the object is used.
+     * The {@code toString} of the object is used.
      * If the object is larger than the length, the right hand side is lost.
      * If the object is null, null text value is used.
      *
@@ -1575,7 +1573,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
 
     /**
      * Appends an object to the builder padding on the right to a fixed length.
-     * The <code>String.valueOf</code> of the <code>int</code> value is used.
+     * The {@code String.valueOf} of the {@code int} value is used.
      * If the object is larger than the length, the right hand side is lost.
      *
      * @param value  the value to append
@@ -1640,7 +1638,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @return this, to enable chaining
      * @throws IndexOutOfBoundsException if the index is invalid
      */
-    public StrBuilder insert(final int index, final char chars[]) {
+    public StrBuilder insert(final int index, final char[] chars) {
         validateIndex(index);
         if (chars == null) {
             return insert(index, nullText);
@@ -1666,7 +1664,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @return this, to enable chaining
      * @throws IndexOutOfBoundsException if any index is invalid
      */
-    public StrBuilder insert(final int index, final char chars[], final int offset, final int length) {
+    public StrBuilder insert(final int index, final char[] chars, final int offset, final int length) {
         validateIndex(index);
         if (chars == null) {
             return insert(index, nullText);
@@ -1894,7 +1892,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Deletes all parts of the builder that the matcher matches.
      * <p>
-     * Matchers can be used to perform advanced deletion behaviour.
+     * Matchers can be used to perform advanced deletion behavior.
      * For example you could write a matcher to delete all occurrences
      * where the character 'a' is followed by a number.
      *
@@ -1908,7 +1906,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Deletes the first match within the builder using the specified matcher.
      * <p>
-     * Matchers can be used to perform advanced deletion behaviour.
+     * Matchers can be used to perform advanced deletion behavior.
      * For example you could write a matcher to delete
      * where the character 'a' is followed by a number.
      *
@@ -2044,7 +2042,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Replaces all matches within the builder with the replace string.
      * <p>
-     * Matchers can be used to perform advanced replace behaviour.
+     * Matchers can be used to perform advanced replace behavior.
      * For example you could write a matcher to replace all occurrences
      * where the character 'a' is followed by a number.
      *
@@ -2059,7 +2057,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Replaces the first match within the builder with the replace string.
      * <p>
-     * Matchers can be used to perform advanced replace behaviour.
+     * Matchers can be used to perform advanced replace behavior.
      * For example you could write a matcher to replace
      * where the character 'a' is followed by a number.
      *
@@ -2075,7 +2073,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Advanced search and replaces within the builder using a matcher.
      * <p>
-     * Matchers can be used to perform advanced behaviour.
+     * Matchers can be used to perform advanced behavior.
      * For example you could write a matcher to delete all occurrences
      * where the character 'a' is followed by a number.
      *
@@ -2098,7 +2096,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Replaces within the builder using a matcher.
      * <p>
-     * Matchers can be used to perform advanced behaviour.
+     * Matchers can be used to perform advanced behavior.
      * For example you could write a matcher to delete all occurrences
      * where the character 'a' is followed by a number.
      *
@@ -2290,7 +2288,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * Extracts the leftmost characters from the string builder without
      * throwing an exception.
      * <p>
-     * This method extracts the left <code>length</code> characters from
+     * This method extracts the left {@code length} characters from
      * the builder. If this many characters are not available, the whole
      * builder is returned. Thus the returned string may be shorter than the
      * length requested.
@@ -2312,7 +2310,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * Extracts the rightmost characters from the string builder without
      * throwing an exception.
      * <p>
-     * This method extracts the right <code>length</code> characters from
+     * This method extracts the right {@code length} characters from
      * the builder. If this many characters are not available, the whole
      * builder is returned. Thus the returned string may be shorter than the
      * length requested.
@@ -2334,7 +2332,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * Extracts some characters from the middle of the string builder without
      * throwing an exception.
      * <p>
-     * This method extracts <code>length</code> characters from the builder
+     * This method extracts {@code length} characters from the builder
      * at the specified index.
      * If the index is negative it is treated as zero.
      * If the index is greater than the builder size, it is treated as the builder size.
@@ -2390,7 +2388,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * Checks if the string builder contains a string matched using the
      * specified matcher.
      * <p>
-     * Matchers can be used to perform advanced searching behaviour.
+     * Matchers can be used to perform advanced searching behavior.
      * For example you could write a matcher to search for the character
      * 'a' followed by a number.
      *
@@ -2420,7 +2418,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @return the first index of the character, or -1 if not found
      */
     public int indexOf(final char ch, int startIndex) {
-        startIndex = (startIndex < 0 ? 0 : startIndex);
+        startIndex = (Math.max(startIndex, 0));
         if (startIndex >= size) {
             return -1;
         }
@@ -2456,7 +2454,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @return the first index of the string, or -1 if not found
      */
     public int indexOf(final String str, int startIndex) {
-        startIndex = (startIndex < 0 ? 0 : startIndex);
+        startIndex = (Math.max(startIndex, 0));
         if (str == null || startIndex >= size) {
             return -1;
         }
@@ -2487,7 +2485,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Searches the string builder using the matcher to find the first match.
      * <p>
-     * Matchers can be used to perform advanced searching behaviour.
+     * Matchers can be used to perform advanced searching behavior.
      * For example you could write a matcher to find the character 'a'
      * followed by a number.
      *
@@ -2502,7 +2500,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * Searches the string builder using the matcher to find the first
      * match searching from the given index.
      * <p>
-     * Matchers can be used to perform advanced searching behaviour.
+     * Matchers can be used to perform advanced searching behavior.
      * For example you could write a matcher to find the character 'a'
      * followed by a number.
      *
@@ -2511,7 +2509,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * @return the first index matched, or -1 if not found
      */
     public int indexOf(final StrMatcher matcher, int startIndex) {
-        startIndex = (startIndex < 0 ? 0 : startIndex);
+        startIndex = (Math.max(startIndex, 0));
         if (matcher == null || startIndex >= size) {
             return -1;
         }
@@ -2608,7 +2606,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     /**
      * Searches the string builder using the matcher to find the last match.
      * <p>
-     * Matchers can be used to perform advanced searching behaviour.
+     * Matchers can be used to perform advanced searching behavior.
      * For example you could write a matcher to find the character 'a'
      * followed by a number.
      *
@@ -2623,7 +2621,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * Searches the string builder using the matcher to find the last
      * match searching from the given index.
      * <p>
-     * Matchers can be used to perform advanced searching behaviour.
+     * Matchers can be used to perform advanced searching behavior.
      * For example you could write a matcher to find the character 'a'
      * followed by a number.
      *
@@ -2690,8 +2688,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * This method allows the contents of the builder to be read
      * using any standard method that expects a Reader.
      * <p>
-     * To use, simply create a <code>StrBuilder</code>, populate it with
-     * data, call <code>asReader</code>, and then read away.
+     * To use, simply create a {@code StrBuilder}, populate it with
+     * data, call {@code asReader}, and then read away.
      * <p>
      * The internal character array is shared between the builder and the reader.
      * This allows you to append to the builder after creating the reader,
@@ -2714,9 +2712,9 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * This method allows you to populate the contents of the builder
      * using any standard method that takes a Writer.
      * <p>
-     * To use, simply create a <code>StrBuilder</code>,
-     * call <code>asWriter</code>, and populate away. The data is available
-     * at any time using the methods of the <code>StrBuilder</code>.
+     * To use, simply create a {@code StrBuilder},
+     * call {@code asWriter}, and populate away. The data is available
+     * at any time using the methods of the {@code StrBuilder}.
      * <p>
      * The internal character array is shared between the builder and the writer.
      * This allows you to intermix calls that append to the builder and
@@ -2733,7 +2731,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
     }
 
     /**
-     * Appends current contents of this <code>StrBuilder</code> to the
+     * Appends current contents of this {@code StrBuilder} to the
      * provided {@link Appendable}.
      * <p>
      * This method tries to avoid doing any extra copies of contents.
@@ -2772,8 +2770,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
         if (this.size != other.size) {
             return false;
         }
-        final char thisBuf[] = this.buffer;
-        final char otherBuf[] = other.buffer;
+        final char[] thisBuf = this.buffer;
+        final char[] otherBuf = other.buffer;
         for (int i = size - 1; i >= 0; i--) {
             final char c1 = thisBuf[i];
             final char c2 = otherBuf[i];
@@ -2801,8 +2799,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
         if (this.size != other.size) {
             return false;
         }
-        final char thisBuf[] = this.buffer;
-        final char otherBuf[] = other.buffer;
+        final char[] thisBuf = this.buffer;
+        final char[] otherBuf = other.buffer;
         for (int i = size - 1; i >= 0; i--) {
             if (thisBuf[i] != otherBuf[i]) {
                 return false;
@@ -2830,7 +2828,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      */
     @Override
     public int hashCode() {
-        final char buf[] = buffer;
+        final char[] buf = buffer;
         int hash = 0;
         for (int i = size - 1; i >= 0; i--) {
             hash = 31 * hash + buf[i];
@@ -2930,7 +2928,6 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
          * Default constructor.
          */
         StrBuilderTokenizer() {
-            super();
         }
 
         /** {@inheritDoc} */
@@ -2967,7 +2964,6 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
          * Default constructor.
          */
         StrBuilderReader() {
-            super();
         }
 
         /** {@inheritDoc} */
@@ -2987,7 +2983,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
 
         /** {@inheritDoc} */
         @Override
-        public int read(final char b[], final int off, int len) {
+        public int read(final char[] b, final int off, int len) {
             if (off < 0 || len < 0 || off > b.length ||
                     (off + len) > b.length || (off + len) < 0) {
                 throw new IndexOutOfBoundsException();
@@ -3054,7 +3050,6 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
          * Default constructor.
          */
         StrBuilderWriter() {
-            super();
         }
 
         /** {@inheritDoc} */

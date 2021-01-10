@@ -447,7 +447,7 @@ public class EqualsBuilderTest {
     @Test
     public void testObjectRecursiveGenericString() {
         // Note: Do not use literals, because string literals are always mapped by same object (internal() of String))!
-        String s1_a = String.valueOf(1);
+        final String s1_a = String.valueOf(1);
         final TestRecursiveGenericObject<String> o1_a = new TestRecursiveGenericObject<>(s1_a);
         final TestRecursiveGenericObject<String> o1_b = new TestRecursiveGenericObject<>(String.valueOf(1));
         final TestRecursiveGenericObject<String> o2 = new TestRecursiveGenericObject<>(String.valueOf(2));
@@ -925,8 +925,8 @@ public class EqualsBuilderTest {
 
     @Test
     public void testRaggedArray() {
-        final long array1[][] = new long[2][];
-        final long array2[][] = new long[2][];
+        final long[][] array1 = new long[2][];
+        final long[][] array2 = new long[2][];
         for (int i = 0; i < array1.length; ++i) {
             array1[i] = new long[2];
             array2[i] = new long[2];
@@ -943,8 +943,8 @@ public class EqualsBuilderTest {
 
     @Test
     public void testMixedArray() {
-        final Object array1[] = new Object[2];
-        final Object array2[] = new Object[2];
+        final Object[] array1 = new Object[2];
+        final Object[] array2 = new Object[2];
         for (int i = 0; i < array1.length; ++i) {
             array1[i] = new long[2];
             array2[i] = new long[2];

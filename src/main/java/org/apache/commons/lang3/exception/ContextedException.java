@@ -45,7 +45,7 @@ import org.apache.commons.lang3.tuple.Pair;
  *     throw new ContextedException("Error posting account transaction", e)
  *          .addContextValue("Account Number", accountNumber)
  *          .addContextValue("Amount Posted", amountPosted)
- *          .addContextValue("Previous Balance", previousBalance)
+ *          .addContextValue("Previous Balance", previousBalance);
  *   }
  * }
  * </pre>
@@ -97,7 +97,6 @@ public class ContextedException extends Exception implements ExceptionContext {
      * The context information is stored using a default implementation.
      */
     public ContextedException() {
-        super();
         exceptionContext = new DefaultExceptionContext();
     }
 

@@ -19,6 +19,7 @@ package org.apache.commons.lang3;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -79,7 +80,6 @@ public class Validate {
      * Constructor. This class should not normally be instantiated.
      */
     public Validate() {
-      super();
     }
 
     // isTrue
@@ -221,10 +221,7 @@ public class Validate {
      * @see #notNull(Object)
      */
     public static <T> T notNull(final T object, final String message, final Object... values) {
-        if (object == null) {
-            throw new NullPointerException(String.format(message, values));
-        }
-        return object;
+        return Objects.requireNonNull(object, () -> String.format(message, values));
     }
 
     // notEmpty array
@@ -247,9 +244,7 @@ public class Validate {
      * @see #notEmpty(Object[])
      */
     public static <T> T[] notEmpty(final T[] array, final String message, final Object... values) {
-        if (array == null) {
-            throw new NullPointerException(String.format(message, values));
-        }
+        Objects.requireNonNull(array, () -> String.format(message, values));
         if (array.length == 0) {
             throw new IllegalArgumentException(String.format(message, values));
         }
@@ -296,9 +291,7 @@ public class Validate {
      * @see #notEmpty(Object[])
      */
     public static <T extends Collection<?>> T notEmpty(final T collection, final String message, final Object... values) {
-        if (collection == null) {
-            throw new NullPointerException(String.format(message, values));
-        }
+        Objects.requireNonNull(collection, () -> String.format(message, values));
         if (collection.isEmpty()) {
             throw new IllegalArgumentException(String.format(message, values));
         }
@@ -345,9 +338,7 @@ public class Validate {
      * @see #notEmpty(Object[])
      */
     public static <T extends Map<?, ?>> T notEmpty(final T map, final String message, final Object... values) {
-        if (map == null) {
-            throw new NullPointerException(String.format(message, values));
-        }
+        Objects.requireNonNull(map, () -> String.format(message, values));
         if (map.isEmpty()) {
             throw new IllegalArgumentException(String.format(message, values));
         }
@@ -394,9 +385,7 @@ public class Validate {
      * @see #notEmpty(CharSequence)
      */
     public static <T extends CharSequence> T notEmpty(final T chars, final String message, final Object... values) {
-        if (chars == null) {
-            throw new NullPointerException(String.format(message, values));
-        }
+        Objects.requireNonNull(chars, () -> String.format(message, values));
         if (chars.length() == 0) {
             throw new IllegalArgumentException(String.format(message, values));
         }
@@ -447,9 +436,7 @@ public class Validate {
      * @since 3.0
      */
     public static <T extends CharSequence> T notBlank(final T chars, final String message, final Object... values) {
-        if (chars == null) {
-            throw new NullPointerException(String.format(message, values));
-        }
+        Objects.requireNonNull(chars, () -> String.format(message, values));
         if (StringUtils.isBlank(chars)) {
             throw new IllegalArgumentException(String.format(message, values));
         }

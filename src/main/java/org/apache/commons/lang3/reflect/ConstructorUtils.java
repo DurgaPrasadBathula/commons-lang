@@ -55,7 +55,6 @@ public class ConstructorUtils {
      * instance to operate.</p>
      */
     public ConstructorUtils() {
-        super();
     }
 
     /**
@@ -81,7 +80,7 @@ public class ConstructorUtils {
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
             InstantiationException {
         args = ArrayUtils.nullToEmpty(args);
-        final Class<?> parameterTypes[] = ClassUtils.toClass(args);
+        final Class<?>[] parameterTypes = ClassUtils.toClass(args);
         return invokeConstructor(cls, args, parameterTypes);
     }
 
@@ -145,7 +144,7 @@ public class ConstructorUtils {
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
             InstantiationException {
         args = ArrayUtils.nullToEmpty(args);
-        final Class<?> parameterTypes[] = ClassUtils.toClass(args);
+        final Class<?>[] parameterTypes = ClassUtils.toClass(args);
         return invokeExactConstructor(cls, args, parameterTypes);
     }
 
@@ -160,7 +159,7 @@ public class ConstructorUtils {
      * @param cls the class to be constructed, not {@code null}
      * @param args the array of arguments, {@code null} treated as empty
      * @param parameterTypes  the array of parameter types, {@code null} treated as empty
-     * @return new instance of <code>cls</code>, not {@code null}
+     * @return new instance of {@code cls}, not {@code null}
      *
      * @throws NullPointerException if {@code cls} is {@code null}
      * @throws NoSuchMethodException if a matching constructor cannot be found
@@ -199,7 +198,7 @@ public class ConstructorUtils {
      */
     public static <T> Constructor<T> getAccessibleConstructor(final Class<T> cls,
             final Class<?>... parameterTypes) {
-        Validate.notNull(cls, "class cannot be null");
+        Validate.notNull(cls, "cls");
         try {
             return getAccessibleConstructor(cls.getConstructor(parameterTypes));
         } catch (final NoSuchMethodException e) {
@@ -219,7 +218,7 @@ public class ConstructorUtils {
      * @throws NullPointerException if {@code ctor} is {@code null}
      */
     public static <T> Constructor<T> getAccessibleConstructor(final Constructor<T> ctor) {
-        Validate.notNull(ctor, "constructor cannot be null");
+        Validate.notNull(ctor, "ctor");
         return MemberUtils.isAccessible(ctor)
                 && isAccessible(ctor.getDeclaringClass()) ? ctor : null;
     }
@@ -244,7 +243,7 @@ public class ConstructorUtils {
      */
     public static <T> Constructor<T> getMatchingAccessibleConstructor(final Class<T> cls,
             final Class<?>... parameterTypes) {
-        Validate.notNull(cls, "class cannot be null");
+        Validate.notNull(cls, "cls");
         // see if we can find the constructor directly
         // most of the time this works and it's much faster
         try {

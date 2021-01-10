@@ -169,6 +169,21 @@ public class StringUtilsSubstringTest  {
     }
 
     @Test
+    public void testSubstringAfter_StringInt() {
+        assertNull(StringUtils.substringAfter(null, 0));
+        assertNull(StringUtils.substringAfter(null, 'X'));
+        assertEquals("", StringUtils.substringAfter("", 0));
+        assertEquals("", StringUtils.substringAfter("", 'X'));
+
+        assertEquals("", StringUtils.substringAfter("foo", 0));
+        assertEquals("ot", StringUtils.substringAfter("foot", 'o'));
+        assertEquals("bc", StringUtils.substringAfter("abc", 'a'));
+        assertEquals("cba", StringUtils.substringAfter("abcba", 'b'));
+        assertEquals("", StringUtils.substringAfter("abc", 'c'));
+        assertEquals("", StringUtils.substringAfter("abc", 'd'));
+    }
+
+    @Test
     public void testSubstringBeforeLast_StringString() {
         assertEquals("fooXXbar", StringUtils.substringBeforeLast("fooXXbarXXbaz", "XX"));
 
@@ -211,6 +226,22 @@ public class StringUtilsSubstringTest  {
         assertEquals("", StringUtils.substringAfterLast("abc", "c"));
         assertEquals("", StringUtils.substringAfterLast("", "d"));
         assertEquals("", StringUtils.substringAfterLast("abc", ""));
+    }
+
+    @Test
+    public void testSubstringAfterLast_StringInt() {
+        assertNull(StringUtils.substringAfterLast(null, 0));
+        assertNull(StringUtils.substringAfterLast(null, 'X'));
+        assertEquals("", StringUtils.substringAfterLast("", 0));
+        assertEquals("", StringUtils.substringAfterLast("", 'a'));
+
+        assertEquals("", StringUtils.substringAfterLast("foo", 0));
+        assertEquals("", StringUtils.substringAfterLast("foo", 'b'));
+        assertEquals("t", StringUtils.substringAfterLast("foot", 'o'));
+        assertEquals("bc", StringUtils.substringAfterLast("abc", 'a'));
+        assertEquals("a", StringUtils.substringAfterLast("abcba", 'b'));
+        assertEquals("", StringUtils.substringAfterLast("abc", 'c'));
+        assertEquals("", StringUtils.substringAfterLast("", 'd'));
     }
 
     //-----------------------------------------------------------------------
@@ -318,6 +349,14 @@ public class StringUtilsSubstringTest  {
              StringUtils.countMatches("one long someone sentence of one", "two"));
         assertEquals(4,
              StringUtils.countMatches("oooooooooooo", "ooo"));
+        assertEquals(0, StringUtils.countMatches(null, "?"));
+        assertEquals(0, StringUtils.countMatches("", "?"));
+        assertEquals(0, StringUtils.countMatches("abba", null));
+        assertEquals(0, StringUtils.countMatches("abba", ""));
+        assertEquals(2, StringUtils.countMatches("abba", "a"));
+        assertEquals(1, StringUtils.countMatches("abba", "ab"));
+        assertEquals(0, StringUtils.countMatches("abba", "xxx"));
+        assertEquals(1, StringUtils.countMatches("ababa", "aba"));
     }
 
     @Test

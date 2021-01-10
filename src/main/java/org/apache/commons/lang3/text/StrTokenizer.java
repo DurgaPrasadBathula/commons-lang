@@ -33,8 +33,8 @@ import org.apache.commons.lang3.StringUtils;
  * This class can split a String into many smaller strings. It aims
  * to do a similar job to {@link java.util.StringTokenizer StringTokenizer},
  * however it offers much more control and flexibility including implementing
- * the <code>ListIterator</code> interface. By default, it is set up
- * like <code>StringTokenizer</code>.
+ * the {@code ListIterator} interface. By default, it is set up
+ * like {@code StringTokenizer}.
  * <p>
  * The input String is split into a number of <i>tokens</i>.
  * Each token is separated from the next String by a <i>delimiter</i>.
@@ -110,9 +110,9 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
     }
 
     /** The text to work on. */
-    private char chars[];
+    private char[] chars;
     /** The parsed tokens */
-    private String tokens[];
+    private String[] tokens;
     /** The current iteration position */
     private int tokenPos;
 
@@ -133,9 +133,9 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
     //-----------------------------------------------------------------------
 
     /**
-     * Returns a clone of <code>CSV_TOKENIZER_PROTOTYPE</code>.
+     * Returns a clone of {@code CSV_TOKENIZER_PROTOTYPE}.
      *
-     * @return a clone of <code>CSV_TOKENIZER_PROTOTYPE</code>.
+     * @return a clone of {@code CSV_TOKENIZER_PROTOTYPE}.
      */
     private static StrTokenizer getCSVClone() {
         return (StrTokenizer) CSV_TOKENIZER_PROTOTYPE.clone();
@@ -185,9 +185,9 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
     }
 
     /**
-     * Returns a clone of <code>TSV_TOKENIZER_PROTOTYPE</code>.
+     * Returns a clone of {@code TSV_TOKENIZER_PROTOTYPE}.
      *
-     * @return a clone of <code>TSV_TOKENIZER_PROTOTYPE</code>.
+     * @return a clone of {@code TSV_TOKENIZER_PROTOTYPE}.
      */
     private static StrTokenizer getTSVClone() {
         return (StrTokenizer) TSV_TOKENIZER_PROTOTYPE.clone();
@@ -240,7 +240,6 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * This constructor is normally used with {@link #reset(String)}.
      */
     public StrTokenizer() {
-        super();
         this.chars = null;
     }
 
@@ -251,7 +250,6 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * @param input  the string which is to be parsed
      */
     public StrTokenizer(final String input) {
-        super();
         if (input != null) {
             chars = input.toCharArray();
         } else {
@@ -325,7 +323,6 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * @param input  the string which is to be parsed, not cloned
      */
     public StrTokenizer(final char[] input) {
-        super();
         this.chars = ArrayUtils.clone(input);
     }
 
@@ -604,10 +601,10 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
             if (chars == null) {
                 // still call tokenize as subclass may do some work
                 final List<String> split = tokenize(null, 0, 0);
-                tokens = split.toArray(new String[split.size()]);
+                tokens = split.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
             } else {
                 final List<String> split = tokenize(chars, 0, chars.length);
-                tokens = split.toArray(new String[split.size()]);
+                tokens = split.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
             }
         }
     }
@@ -623,7 +620,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * offset or count to be parsed, or call the tokenizer multiple times on
      * multiple strings. It is also be possible to filter the results.
      * <p>
-     * <code>StrTokenizer</code> will always pass a zero offset and a count
+     * {@code StrTokenizer} will always pass a zero offset and a count
      * equal to the length of the array to this method, however a subclass
      * may pass other values, or even an entirely different array.
      *
@@ -1067,7 +1064,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
     /**
      * Creates a new instance of this Tokenizer. The new instance is reset so
      * that it will be at the start of the token list.
-     * If a {@link CloneNotSupportedException} is caught, return <code>null</code>.
+     * If a {@link CloneNotSupportedException} is caught, return {@code null}.
      *
      * @return a new instance of this Tokenizer which has been reset.
      */
